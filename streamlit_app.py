@@ -7,7 +7,8 @@ import datetime
 
 # タイトル等
 st.title("JASCO UV-vis Spectra Formatter")
-st.write("スペクトルマネージャーでエクスポートしたテキストファイルをアップロード")
+st.write("スペクトルマネージャーでテキスト形式でエクスポート（ファイル名をしっかりつけておく）")
+st.write("以下にアップロードする。複数アップロードでプロット重ね書き\n")
 
 # ファイルアップロード
 uploaded_files = st.file_uploader(
