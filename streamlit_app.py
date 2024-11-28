@@ -50,21 +50,20 @@ def convert_df_to_excel(df):
             'min': df['X'].min(),  # 横軸の最小値をXデータの最小値に設定
             'max': df['X'].max(),  # 横軸の最大値をXデータの最大値に設定
             'reverse': False,
-            'label': 'Wavelength / nm',  # 横軸ラベルを設定
-            'font': {'color': 'black', 'size': 16, 'name': 'Arial'},  # フォント設定
+            'name': 'Wavelength / nm',  # 横軸ラベルを設定
+            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},　#数値のフォント設定
+            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'},　#ラベルのフォント設定
         })
 
         # 縦軸設定
         chart.set_y_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
-            'label': 'Absorbance (arb units.)',  # 縦軸ラベルを設定
+            'name': 'Absorbance (arb units.)',  # 縦軸ラベルを設定
             'major_gridlines': {'visible': False},  # 縦軸の目盛線を削除
-            'font': {'color': 'black', 'size': 16, 'name': 'Arial'},  # フォント設定
+            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},　#数値のフォント設定
+            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'},　#ラベルのフォント設定
         })
-
-        # フォント設定（グラフ内すべての文字）
-        chart.set_title({'name': 'Absorbance vs Wavelength', 'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'}})
 
         # グラフを配置
         worksheet.insert_chart('A3', chart)
