@@ -64,7 +64,6 @@ def convert_files_to_excel(files):
             'major_gridlines': {'visible': False},
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
-            'major_unit': 0.1,
         })
         
         start_col = 11  # 初期列（L列 = インデックス11）
