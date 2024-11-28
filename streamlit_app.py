@@ -53,8 +53,7 @@ def convert_df_to_excel(df):
         # グラフを配置
         worksheet.insert_chart('A3', chart)
 
-        writer.save()
-    return output.getvalue()
+    return output.getvalue()  # 自動的に保存されるので、明示的な保存は不要
 
 if uploaded_file is not None:
     content = uploaded_file.read().decode("shift_jis").splitlines()
