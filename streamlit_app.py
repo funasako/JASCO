@@ -112,6 +112,10 @@ def convert_files_to_excel(files):
     return output.getvalue()
 
 if uploaded_files:
+    # すべてのデータを格納するリスト
+    data_frames = []
+    
+    # Excel変換とデータ保存
     excel_data = convert_files_to_excel(uploaded_files)
     st.download_button(
         label="Excelファイルをダウンロード",
@@ -119,3 +123,32 @@ if uploaded_files:
         file_name="processed_files.xlsx",
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
+
+    # 重ね書きグラフの作成
+    fig, ax = plt.subplots(figsize=(8, 6))
+    
+    for file in uploaded_files:
+        content = file.read().decode("shift_jis").splitlines()
+        xy_start = content.index("XYDATA") + 1
+        xy_end = content.index("##### Extended Information") - 2
+        xy_data_lines = content[xy_start:xy_end + 1]
+
+        # データフレーム化
+        data = [line.split() for line in xy_data_lines if line.strip()]
+        df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+        data_frames.append(df)
+
+        # グラフにプロットを追加
+        ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
+
+    # グラフの装飾
+    ax.set_xlabel("Wavelength / nm", fontsize=12)
+    ax.set_ylabel("Absorbance", fontsize=12)
+    ax.set_xlim(300, max(df["X"].max() for df in data_frames))  # Xの最大値を動的に設定
+    ax.legend(loc="upper right", fontsize=10)
+    ax.grid(True)
+    ax.set_title("Overlayed Spectra", fontsize=14)
+    
+    # Streamlitでグラフを表示
+    st.pyplot(fig)
+    
