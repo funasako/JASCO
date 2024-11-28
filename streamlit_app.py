@@ -43,6 +43,8 @@ def convert_df_to_excel(df):
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
             'major_unit': 100,  # 横軸の目盛り間隔
+            'min': df['Y'].min(),  # 横軸の最小値をYデータの最小値に設定
+            'max': df['Y'].max(),  # 横軸の最大値をYデータの最大値に設定
             'reverse': False,
         })
         chart.set_y_axis({
@@ -70,8 +72,7 @@ if uploaded_file is not None:
     ax.plot(df["X"], df["Y"], linewidth=1.5, color='blue')  # 線の描画
     ax.set_xlabel("Wavelength / nm")
     ax.set_ylabel("Absorbance")
-    ax.set_xlim(df["X"].min(), df["X"].max())  # 横軸の範囲をデータに合わせる
-    ax.set_ylim(df["Y"].min(), df["Y"].max())  # 縦軸の範囲をデータに合わせる
+    ax.set_xlim(df["X"].min(), df["X"].max())  # 横軸の範囲をXデータに合わせる
     st.pyplot(fig)
 
     # データをテーブル表示
