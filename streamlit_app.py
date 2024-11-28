@@ -1,3 +1,12 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import io
+import xlsxwriter
+
+# 複数ファイルアップロード
+uploaded_files = st.file_uploader("テキストファイルをアップロードしてください", type=["txt"], accept_multiple_files=True)
+
 def convert_df_to_excel(files_data):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
@@ -97,3 +106,36 @@ def convert_df_to_excel(files_data):
         worksheet.insert_chart('A3', chart)
 
     return output.getvalue()
+
+
+if uploaded_files:
+    files_data = []
+    for uploaded_file in uploaded_files:
+        content = uploaded_file.read().decode("shift_jis").splitlines()
+        xy_start = content.index("XYDATA") + 1
+        xy_end = content.index("##### Extended Information") - 2
+        xy_data_lines = content[xy_start:xy_end + 1]
+        data = [line.split() for line in xy_data_lines if line.strip()]
+        df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+        files_data.append((uploaded_file.name, df))
+
+    # グラフを描画
+    st.write("### グラフ表示")
+    fig, ax = plt.subplots()
+    for file_idx, (file_name, df) in enumerate(files_data):
+        ax.plot(df["X"], df["Y"], linewidth=1.5, color='#008EC0')  # プロットの線の色を#008EC0に変更
+    ax.set_xlabel("Wavelength / nm")
+    ax.set_ylabel("Absorbance")
+    ax.set_xlim(300, df["X"].max())  # 横軸の開始範囲を300に固定
+    st.pyplot(fig)
+
+    # Excelデータを作成しダウンロード
+    excel_filename = uploaded_files[0].name.replace(".txt", ".xlsx")  # 1つ目のファイル名を使用
+    excel_data = convert_df_to_excel(files_data)
+    st.download_button(
+        label="Excelファイルをダウンロード",
+        data=excel_data,
+        file_name=excel_filename,
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    
