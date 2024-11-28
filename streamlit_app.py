@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from io import BytesIO
 
 # ファイルアップロード
 uploaded_file = st.file_uploader("テキストファイルをアップロードしてください", type=["txt"])
@@ -31,20 +30,31 @@ if uploaded_file is not None:
     st.write("### 抽出したデータ")
     st.dataframe(df)
 
-    # エクセルファイルに保存
-    def convert_df_to_excel(dataframe):
-        """データフレームをエクセルファイルに変換"""
-        output = BytesIO()
-        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
-            dataframe.to_excel(writer, index=False, sheet_name="Sheet1")
-        processed_data = output.getvalue()
-        return processed_data
+    # Excelファイルにデータとグラフを書き出す
+    def convert_df_to_excel(df):
+        output = pd.ExcelWriter("output.xlsx", engine='xlsxwriter')
+        df.to_excel(output, index=False, sheet_name='Data')
 
-    # エクセルファイルのダウンロードリンクを作成
+        workbook  = output.book
+        worksheet = output.sheets['Data']
+
+        # グラフを作成
+        chart = workbook.add_chart({'type': 'line'})
+        chart.add_series({
+            'categories': ['Data', 1, 0, len(df), 0],  # X軸（1列目）
+            'values':     ['Data', 1, 1, len(df), 1],  # Y軸（2列目）
+            'name':       'XY Data',
+        })
+
+        # グラフをシートに挿入
+        worksheet.insert_chart('D2', chart)  # グラフをD2セルに挿入
+
+        output.close()
+
+        # Excelファイルを読み込み、バイト形式に変換
+        with open("output.xlsx", "rb") as file:
+            return file.read()
+
+    # ダウンロードボタンの作成
     excel_data = convert_df_to_excel(df)
-    st.download_button(
-        label="エクセルファイルをダウンロード",
-        data=excel_data,
-        file_name="xy_data.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
+    st.download_button(label="Excelファイルをダウンロード", data=excel_data, file_name="data_with_chart.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
