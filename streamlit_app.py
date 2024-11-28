@@ -51,8 +51,8 @@ def convert_df_to_excel(df):
             'max': df['X'].max(),  # 横軸の最大値をXデータの最大値に設定
             'reverse': False,
             'name': 'Wavelength / nm',  # 横軸ラベルを設定
-            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},　#数値のフォント設定
-            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'},　#ラベルのフォント設定
+            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'}, #数値のフォント設定
+            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'}, #ラベルのフォント設定
         })
 
         # 縦軸設定
@@ -61,8 +61,8 @@ def convert_df_to_excel(df):
             'major_tick_mark': 'inside',
             'name': 'Absorbance (arb units.)',  # 縦軸ラベルを設定
             'major_gridlines': {'visible': False},  # 縦軸の目盛線を削除
-            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},　#数値のフォント設定
-            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'},　#ラベルのフォント設定
+            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'}, #数値のフォント設定
+            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'}, #ラベルのフォント設定
         })
 
         # グラフを配置
