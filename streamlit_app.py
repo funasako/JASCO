@@ -33,17 +33,9 @@ def convert_df_to_excel(files_data):
 
             # Xデータ、Yデータ、計算結果を入力
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-                try:
-                    # xとyが数値であることを確認し、数値に変換
-                    x = float(x) if isinstance(x, (int, float, str)) else None
-                    y = float(y) if isinstance(y, (int, float, str)) else None
-                except ValueError:
-                    # 数値に変換できない場合はその行をスキップ
-                    x, y = None, None
-                
-                if x is not None and y is not None:
-                    worksheet.write(i + 2 + file_idx * len(df), x, cell_format)  # Xデータ
-                    worksheet.write(i + 2 + file_idx * len(df), y_col, y, cell_format)  # Yデータ
+                worksheet.write(i + 2 , x, cell_format)  # Xデータ
+                worksheet.write(i + 2 , x_offset + 1, y, cell_format)  # Yデータ
+
 
             # 計算用のN1、N2、R1、R2、V1、V2などを記入
             worksheet.write(f'{chr(65 + calc_col)}{file_idx * 3 + 2}', 1, border_format)  # N1/R1/V1セルに1
