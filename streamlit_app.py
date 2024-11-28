@@ -12,6 +12,7 @@ st.write("以下にアップロードする。複数アップロードでプロ�
 
 # ファイルアップロード
 uploaded_files = st.file_uploader(
+    "テキストファイルをアップロード（複数可）"
     type=["txt"], 
     accept_multiple_files=True
 )
