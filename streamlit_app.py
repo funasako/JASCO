@@ -38,7 +38,11 @@ def convert_df_to_excel(df):
         chart.set_size({'width': 533, 'height': 377})  # 幅13.3cm, 高さ10cm
         chart.set_chartarea({'border': {'none': True}, 'fill': {'none': True}})
         chart.set_plotarea({'border': {'color': 'black', 'width': 1.5}, 'fill': {'none': True}})
+        
+        # 凡例を非表示
+        chart.set_legend({'none': True})
 
+        # 横軸設定
         chart.set_x_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
@@ -46,11 +50,19 @@ def convert_df_to_excel(df):
             'min': df['X'].min(),  # 横軸の最小値をXデータの最小値に設定
             'max': df['X'].max(),  # 横軸の最大値をXデータの最大値に設定
             'reverse': False,
+            'label': 'Wavelength / nm',  # 横軸ラベルを設定
         })
+
+        # 縦軸設定
         chart.set_y_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
+            'label': 'Absorbance (arb units.)',  # 縦軸ラベルを設定
+            'major_gridlines': {'visible': False},  # 縦軸の目盛線を削除
         })
+
+        # フォント設定
+        chart.set_chartstyle({'font': {'color': 'black', 'size': 16, 'name': 'Arial'}})
 
         # グラフを配置
         worksheet.insert_chart('A3', chart)
