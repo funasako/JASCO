@@ -7,7 +7,7 @@ import xlsxwriter
 # ファイルアップロード
 uploaded_file = st.file_uploader("テキストファイルをアップロードしてください", type=["txt"])
 
-def convert_df_to_excel(df):
+def convert_df_to_excel(df, file_name):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
         workbook = writer.book
@@ -21,6 +21,9 @@ def convert_df_to_excel(df):
         # セルの高さを設定
         for i in range(len(df) + 3):
             worksheet.set_row(i, 20, cell_format)  # セルの高さを20ptに変更し、フォントを設定
+
+        # L1セルにファイル名を記入
+        worksheet.write('L1', file_name, cell_format)
 
         # データを書き込む (L3セルとM3セルから)
         worksheet.write('L2', 'WL', cell_format)  # L2セルの「Xデータ」を「WL」に変更
@@ -110,7 +113,7 @@ if uploaded_file is not None:
     # Excelデータを作成しダウンロード
     # アップロードされたファイル名を取得し、拡張子を.xlsxに変更
     excel_filename = uploaded_file.name.replace(".txt", ".xlsx")
-    excel_data = convert_df_to_excel(df)
+    excel_data = convert_df_to_excel(df, uploaded_file.name)  # ファイル名を渡す
     st.download_button(
         label="Excelファイルをダウンロード",
         data=excel_data,
