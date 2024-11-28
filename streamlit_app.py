@@ -105,7 +105,7 @@ def convert_df_to_excel(files_data):
         # グラフを配置
         worksheet.insert_chart('A3', chart)
 
-    return output.getvalue()
+    return
 
 
 if uploaded_files:
