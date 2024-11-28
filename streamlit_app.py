@@ -42,7 +42,10 @@ def convert_df_to_excel(df):
             'categories': f"=Data!$L$3:$L${len(df) + 2}",
             'values': f"=Data!$N$3:$N${len(df) + 2}",  # 新たに計算されたN列を使用
             'marker': {'type': 'none'},
-            'line': {'color': '#008EC0'},  # プロットの線の色を#008EC0に変更
+            'line': {
+                'color': '#008EC0',  # プロットの線の色を#008EC0に変更
+                'width': 1.5,  # プロットの線の太さを1.5ptに設定
+            },
         })
 
         # グラフのプロパティ設定
