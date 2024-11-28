@@ -50,8 +50,20 @@ def convert_files_to_excel(files):
         })
         
         start_col = 11  # 初期列（L列 = インデックス11）
-
+        
         global_max_x = 700
+
+
+        # すべてのデータを格納するリスト
+        data_frames = []
+        # 重ね書きグラフの作成
+        fig, ax = plt.subplots(figsize=(8, 6))
+        
+
+
+
+
+        
         for file in files:
             # ファイル名とデータの読み取り
             content = file.read().decode("shift_jis").splitlines()
@@ -61,7 +73,13 @@ def convert_files_to_excel(files):
 
             data = [line.split() for line in xy_data_lines if line.strip()]
             df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+            # データフレーム化
+            data_frames.append(df)
+    
+            # グラフにプロットを追加
+            ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
 
+            
             # セルの高さを設定
             for i in range(len(df) + 3):
                 worksheet.set_row(i, 20, cell_format)
@@ -112,8 +130,7 @@ def convert_files_to_excel(files):
     return output.getvalue()
 
 if uploaded_files:
-    # すべてのデータを格納するリスト
-    data_frames = []
+
     
     # Excel変換とデータ保存
     excel_data = convert_files_to_excel(uploaded_files)
@@ -124,22 +141,10 @@ if uploaded_files:
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
 
-    # 重ね書きグラフの作成
-    fig, ax = plt.subplots(figsize=(8, 6))
+
     
     for file in uploaded_files:
-        content = file.read().decode("shift_jis").splitlines()
-        xy_start = content.index("XYDATA") + 1
-        xy_end = content.index("##### Extended Information") - 2
-        xy_data_lines = content[xy_start:xy_end + 1]
 
-        # データフレーム化
-        data = [line.split() for line in xy_data_lines if line.strip()]
-        df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
-        data_frames.append(df)
-
-        # グラフにプロットを追加
-        ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
 
     # グラフの装飾
     ax.set_xlabel("Wavelength / nm", fontsize=12)
