@@ -9,7 +9,7 @@ import datetime
 st.set_page_config(page_title="JASCO UV-vis")
 st.title("JASCO UV-vis Spectra Formatter")
 st.write("1. スペクトルマネージャーでテキスト形式でエクスポート（ファイル名をしっかりつけておく）")
-st.write("2. 以下にアップロードする。複数アップロードでプロット重ね書き\n")
+st.write("2. 以下にアップロードする。複数アップロードでプロット重ね書き  \n")
 
 # ファイルアップロード
 uploaded_files = st.file_uploader(
