@@ -28,11 +28,17 @@ def convert_df_to_excel(df):
             worksheet.write(i + 2, 11, x, cell_format)  # L列 (インデックス11)
             worksheet.write(i + 2, 12, y, cell_format)  # M列 (インデックス12)
 
+        # N列の計算式を設定
+        worksheet.write('N1', 1, cell_format)  # N1セルに1
+        worksheet.write('N2', 0, cell_format)  # N2セルに0
+        for i in range(len(df)):
+            worksheet.write_formula(i + 2, 13, f"=M{i+3}*$N$1+$N$2", cell_format)  # N列に計算式
+
         # グラフを作成
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
         chart.add_series({
             'categories': f"=Data!$L$3:$L${len(df) + 2}",
-            'values': f"=Data!$M$3:$M${len(df) + 2}",
+            'values': f"=Data!$N$3:$N${len(df) + 2}",  # 新たに計算されたN列を使用
             'marker': {'type': 'none'},
             'line': {'color': 'blue'},  # 単色の線
         })
