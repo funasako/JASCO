@@ -33,8 +33,8 @@ def convert_df_to_excel(files_data):
 
             # Xデータ、Yデータ、計算結果を入力
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-                worksheet.write(i + 2 , x, cell_format)  # Xデータ
-                worksheet.write(i + 2 , x_offset + 1, y, cell_format)  # Yデータ
+                worksheet.write(i + 2 , x_col, x, cell_format)  # Xデータ
+                worksheet.write(i + 2 , y_col, y, cell_format)  # Yデータ
 
 
             # 計算用のN1、N2、R1、R2、V1、V2などを記入
