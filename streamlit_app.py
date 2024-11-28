@@ -31,14 +31,14 @@ if uploaded_file is not None:
         for i in range(0, len(df) + 3):  # データ行数分+ヘッダ行
             worksheet.set_row(i, 21)  # すべての行を21ピクセルに設定
 
-        # グラフ作成
-        chart = workbook.add_chart({'type': 'line'})
+        # グラフ作成（散布図）
+        chart = workbook.add_chart({'type': 'scatter'})
 
         # グラフデータを指定
         chart.add_series({
             'categories': ['Data', 2, 9, 2 + len(df) - 1, 9],  # X軸データ (J3から)
             'values':     ['Data', 2, 10, 2 + len(df) - 1, 10],  # Y軸データ (K3から)
-            'name':       None,
+            'marker': {'type': 'circle', 'size': 5, 'border': {'color': 'black'}},  # 散布図のマーカー設定
         })
 
         # グラフスタイル設定
@@ -72,7 +72,7 @@ if uploaded_file is not None:
 
     # ダウンロードボタンの作成
     excel_data = convert_df_to_excel(df)
-    st.download_button(label="Excelファイルをダウンロード", data=excel_data, file_name="data_with_chart.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    st.download_button(label="Excelファイルをダウンロード", data=excel_data, file_name="data_with_scatter_chart.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
     # グラフを描画
     st.write("### グラフ表示")
