@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from io import BytesIO  # バイトデータ用のライブラリ
+from io import BytesIO
 
 # ファイルアップロード
 uploaded_file = st.file_uploader("テキストファイルをアップロードしてください", type=["txt"])
@@ -31,16 +31,20 @@ if uploaded_file is not None:
     st.write("### 抽出したデータ")
     st.dataframe(df)
 
-    # エクセルファイルにデータを書き込む
-    output = BytesIO()  # バイトストリームを作成
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, index=False, sheet_name='XY Data')  # Excelに書き込み
-        writer.save()
-    
-    # ダウンロードボタンの作成
+    # エクセルファイルに保存
+    def convert_df_to_excel(dataframe):
+        """データフレームをエクセルファイルに変換"""
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            dataframe.to_excel(writer, index=False, sheet_name="Sheet1")
+        processed_data = output.getvalue()
+        return processed_data
+
+    # エクセルファイルのダウンロードリンクを作成
+    excel_data = convert_df_to_excel(df)
     st.download_button(
         label="エクセルファイルをダウンロード",
-        data=output.getvalue(),
+        data=excel_data,
         file_name="xy_data.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
