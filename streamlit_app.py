@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import io
 import xlsxwriter
 
-# ファイルアップロード
-uploaded_file = st.file_uploader("テキストファイルをアップロードしてください", type=["txt"])
+# 複数ファイルアップロード
+uploaded_files = st.file_uploader("テキストファイルをアップロードしてください", type=["txt"], accept_multiple_files=True)
 
-def convert_df_to_excel(df, file_name):
+def convert_df_to_excel(files_data):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
         workbook = writer.book
@@ -17,47 +17,51 @@ def convert_df_to_excel(df, file_name):
         # フォント設定用のフォーマットを作成
         cell_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12})
         border_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12, 'border': 1})
-        
-        # セルの高さを設定
-        for i in range(len(df) + 3):
-            worksheet.set_row(i, 20, cell_format)  # セルの高さを20ptに変更し、フォントを設定
 
-        # L1セルにファイル名を記入
-        worksheet.write('L1', file_name, cell_format)
+        x_offset = 11  # 初期のL列（Xデータの列）
 
-        # データを書き込む (L3セルとM3セルから)
-        worksheet.write('L2', 'WL', cell_format)  # L2セルの「Xデータ」を「WL」に変更
-        worksheet.write('M2', 'Abs', cell_format)  # M3セルの「Yデータ」を「Abs」に変更
-        for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-            worksheet.write(i + 2, 11, x, cell_format)  # L列 (インデックス11)
-            worksheet.write(i + 2, 12, y, cell_format)  # M列 (インデックス12)
+        # 各ファイルに対して処理を行う
+        for file_idx, (file_name, df) in enumerate(files_data):
+            # L1セルにファイル名を記入
+            worksheet.write(f'L{file_idx * 3 + 1}', file_name, cell_format)
 
-        # N列の計算式を設定
-        worksheet.write('N1', 1, border_format)  # N1セルに1
-        worksheet.write('N2', 0, border_format)  # N2セルに0
-        worksheet.write_formula('N3', "=M3*$N$1+$N$2", cell_format)  # N3セル以降に計算式を設定
-        for i in range(1, len(df)):
-            worksheet.write_formula(i + 2, 13, f"=M{i+3}*$N$1+$N$2", cell_format)  # N列に計算式
+            # Xデータ、Yデータを記入
+            worksheet.write(f'L{file_idx * 3 + 2}', 'WL', cell_format)  # Xデータの列名
+            worksheet.write(f'M{file_idx * 3 + 2}', 'Abs', cell_format)  # Yデータの列名
+
+            for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
+                worksheet.write(i + 2 + file_idx * len(df), x, cell_format)  # Xデータ
+                worksheet.write(i + 2 + file_idx * len(df), x_offset + 1, y, cell_format)  # Yデータ
+
+            # N列（補正値）の計算式を設定
+            worksheet.write(f'N{file_idx * 3 + 2}', 1, border_format)  # N1セルに1
+            worksheet.write(f'N{file_idx * 3 + 3}', 0, border_format)  # N2セルに0
+            worksheet.write_formula(f'N{file_idx * 3 + 4}', f"=M{file_idx * 3 + 4}*$N${file_idx * 3 + 2}+$N${file_idx * 3 + 3}", cell_format)  # N3セル以降
+            for i in range(1, len(df)):
+                worksheet.write_formula(f'N{i + 2 + file_idx * len(df)}', f"=M{i + 3 + file_idx * len(df)}*$N${file_idx * 3 + 2}+$N${file_idx * 3 + 3}", cell_format)
+
+            # 次のデータが追加される列（O, P, Q...）
+            x_offset += 3  # 1列分（L, M）を使用した後、次はO, P, Qにデータを追加
 
         # グラフを作成
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
-        chart.add_series({
-            'categories': f"=Data!$L$3:$L${len(df) + 2}",
-            'values': f"=Data!$N$3:$N${len(df) + 2}",  # 新たに計算されたN列を使用
-            'marker': {'type': 'none'},
-            'line': {
-                'color': '#008EC0',  # プロットの線の色を#008EC0に変更
-                'width': 1.5,  # プロットの線の太さを1.5ptに設定
-            },
-        })
+
+        # 各ファイルのXデータと補正されたYデータをグラフに追加
+        for file_idx, (file_name, df) in enumerate(files_data):
+            x_start = 11 + 3 * file_idx  # 各ファイルに対応するXデータの列
+            y_start = 12 + 3 * file_idx  # 各ファイルに対応する補正後のYデータの列
+            chart.add_series({
+                'categories': f"=Data!${chr(65 + x_start)}$3:${chr(65 + x_start)}${len(df) + 2}",
+                'values': f"=Data!${chr(65 + y_start)}$3:${chr(65 + y_start)}${len(df) + 2}",
+                'marker': {'type': 'none'},
+                'line': {'color': '#008EC0', 'width': 1.5},  # 線の色と太さ
+            })
 
         # グラフのプロパティ設定
         chart.set_size({'width': 533, 'height': 377})  # 幅13.3cm, 高さ10cm
         chart.set_chartarea({'border': {'none': True}, 'fill': {'none': True}})
         chart.set_plotarea({'border': {'color': 'black', 'width': 1.5}, 'fill': {'none': True}})
-        
-        # 凡例を非表示
-        chart.set_legend({'none': True})
+        chart.set_legend({'none': True})  # 凡例を非表示
 
         # 横軸設定 (開始範囲を300に固定)
         chart.set_x_axis({
@@ -86,37 +90,29 @@ def convert_df_to_excel(df, file_name):
         # グラフを配置
         worksheet.insert_chart('A3', chart)
 
-    return output.getvalue()  # 自動的に保存されるので、明示的な保存は不要
+    return output.getvalue()
 
-if uploaded_file is not None:
-    content = uploaded_file.read().decode("shift_jis").splitlines()
-    xy_start = content.index("XYDATA") + 1
-    xy_end = content.index("##### Extended Information") - 2
-    xy_data_lines = content[xy_start:xy_end + 1]
-
-    data = [line.split() for line in xy_data_lines if line.strip()]
-    df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+if uploaded_files:
+    files_data = []
+    for uploaded_file in uploaded_files:
+        content = uploaded_file.read().decode("shift_jis").splitlines()
+        xy_start = content.index("XYDATA") + 1
+        xy_end = content.index("##### Extended Information") - 2
+        xy_data_lines = content[xy_start:xy_end + 1]
+        data = [line.split() for line in xy_data_lines if line.strip()]
+        df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+        files_data.append((uploaded_file.name, df))
 
     # グラフを描画
     st.write("### グラフ表示")
     fig, ax = plt.subplots()
-    ax.plot(df["X"], df["Y"], linewidth=1.5, color='#008EC0')  # プロットの線の色を#008EC0に変更
+    for file_idx, (file_name, df) in enumerate(files_data):
+        ax.plot(df["X"], df["Y"], linewidth=1.5, color='#008EC0')  # プロットの線の色を#008EC0に変更
     ax.set_xlabel("Wavelength / nm")
     ax.set_ylabel("Absorbance")
     ax.set_xlim(300, df["X"].max())  # 横軸の開始範囲を300に固定
     st.pyplot(fig)
 
-    # データをテーブル表示
-    st.write("### 抽出したデータ")
-    st.dataframe(df)
-
     # Excelデータを作成しダウンロード
-    # アップロードされたファイル名を取得し、拡張子を.xlsxに変更
-    excel_filename = uploaded_file.name.replace(".txt", ".xlsx")
-    excel_data = convert_df_to_excel(df, uploaded_file.name)  # ファイル名を渡す
-    st.download_button(
-        label="Excelファイルをダウンロード",
-        data=excel_data,
-        file_name=excel_filename,
-        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    )
+    excel_filename = uploaded_files[0].name.replace(".txt", ".xlsx")  # 1つ目のファイル名を使用
+    excel_data = convert
