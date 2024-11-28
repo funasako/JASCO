@@ -43,8 +43,8 @@ def convert_df_to_excel(df):
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
             'major_unit': 100,  # 横軸の目盛り間隔
-            'min': df['Y'].min(),  # 横軸の最小値をYデータの最小値に設定
-            'max': df['Y'].max(),  # 横軸の最大値をYデータの最大値に設定
+            'min': df['X'].min(),  # 横軸の最小値をXデータの最小値に設定
+            'max': df['X'].max(),  # 横軸の最大値をXデータの最大値に設定
             'reverse': False,
         })
         chart.set_y_axis({
