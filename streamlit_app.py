@@ -6,6 +6,7 @@ import xlsxwriter
 import datetime
 
 # タイトル等
+st.set_page_config(page_title="JASCO UV-vis")
 st.title("JASCO UV-vis Spectra Formatter")
 st.write("スペクトルマネージャーでテキスト形式でエクスポート（ファイル名をしっかりつけておく）")
 st.write("以下にアップロードする。複数アップロードでプロット重ね書き\n")
