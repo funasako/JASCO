@@ -133,6 +133,10 @@ def convert_files_to_excel(files):
         ax.legend(loc="upper right", fontsize=10)
         ax.grid(True)
         ax.set_title("Overlayed Spectra", fontsize=14)
+
+        # Streamlitでグラフを表示
+        st.pyplot(fig)
+    
     return output.getvalue()
 
 if uploaded_files:
@@ -147,7 +151,4 @@ if uploaded_files:
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
 
-    
-    # Streamlitでグラフを表示
-    st.pyplot(fig)
     
