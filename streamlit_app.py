@@ -5,6 +5,10 @@ import io
 import xlsxwriter
 import datetime
 
+# タイトル等
+st.title("JASCO UV-vis Spectra Formatter")
+st.write("スペクトルマネージャーでエクスポートしたテキストファイルをアップロード")
+
 # ファイルアップロード
 uploaded_files = st.file_uploader(
     "テキストファイルをアップロードしてください (複数選択可能)", 
