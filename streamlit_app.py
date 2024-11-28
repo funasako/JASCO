@@ -84,21 +84,6 @@ if uploaded_files:
     ax.legend()  # 凡例を追加
     st.pyplot(fig)
 
-    # データテーブルの横並び表示
-    st.write("### 抽出したデータ")
-    columns = st.columns(len(uploaded_files))
-    for col, file in zip(columns, uploaded_files):
-        content = file.read().decode("shift_jis").splitlines()
-        xy_start = content.index("XYDATA") + 1
-        xy_end = content.index("##### Extended Information") - 2
-        xy_data_lines = content[xy_start:xy_end + 1]
-
-        data = [line.split() for line in xy_data_lines if line.strip()]
-        df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
-        with col:
-            st.write(f"#### {file.name}")
-            st.dataframe(df)
-
     # Excelデータ作成とダウンロード
     excel_data = convert_files_to_excel(uploaded_files)
     st.download_button(
