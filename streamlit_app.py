@@ -18,19 +18,21 @@ def convert_df_to_excel(files_data):
         cell_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12})
         border_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12, 'border': 1})
 
-        x_offset = 11  # 初期のL列（Xデータの列）
-
-        # 各ファイルに対して処理を行う
+        # 各ファイルに対する処理
         for file_idx, (file_name, df) in enumerate(files_data):
-            # L1セルにファイル名を記入
+            # ファイル名を記入
             worksheet.write(f'L{file_idx * 3 + 1}', file_name, cell_format)
 
-            # Xデータ、Yデータを記入
-            worksheet.write(f'L{file_idx * 3 + 2}', 'WL', cell_format)  # Xデータの列名
-            worksheet.write(f'M{file_idx * 3 + 2}', 'Abs', cell_format)  # Yデータの列名
+            # XデータとYデータを記入
+            x_col = 11 + file_idx * 4  # Xデータの列（L, P, T列…）
+            y_col = 12 + file_idx * 4  # Yデータの列（M, Q, U列…）
+            calc_col = 13 + file_idx * 4  # 計算結果の列（N, R, V列…）
 
+            worksheet.write(f'{chr(65 + x_col)}{file_idx * 3 + 2}', 'WL', cell_format)  # Xデータの列名
+            worksheet.write(f'{chr(65 + y_col)}{file_idx * 3 + 2}', 'Abs', cell_format)  # Yデータの列名
+
+            # Xデータ、Yデータ、計算結果を入力
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-                # x と y を数値に変換する
                 try:
                     x = float(x)
                     y = float(y)
@@ -38,28 +40,31 @@ def convert_df_to_excel(files_data):
                     continue  # 変換できない場合はスキップ
 
                 worksheet.write(i + 2 + file_idx * len(df), x, cell_format)  # Xデータ
-                worksheet.write(i + 2 + file_idx * len(df), x_offset + 1, y, cell_format)  # Yデータ
+                worksheet.write(i + 2 + file_idx * len(df), y_col, y, cell_format)  # Yデータ
 
-            # N列（補正値）の計算式を設定
-            worksheet.write(f'N{file_idx * 3 + 2}', 1, border_format)  # N1セルに1
-            worksheet.write(f'N{file_idx * 3 + 3}', 0, border_format)  # N2セルに0
-            worksheet.write_formula(f'N{file_idx * 3 + 4}', f"=M{file_idx * 3 + 4}*$N${file_idx * 3 + 2}+$N${file_idx * 3 + 3}", cell_format)  # N3セル以降
+            # 計算用のN1、N2、R1、R2、V1、V2などを記入
+            worksheet.write(f'{chr(65 + calc_col)}{file_idx * 3 + 2}', 1, border_format)  # N1/R1/V1セルに1
+            worksheet.write(f'{chr(65 + calc_col)}{file_idx * 3 + 3}', 0, border_format)  # N2/R2/V2セルに0
+            worksheet.write_formula(f'{chr(65 + calc_col)}{file_idx * 3 + 4}', f"={chr(65 + y_col)}{file_idx * 3 + 4}*${chr(65 + calc_col)}${file_idx * 3 + 2}+${chr(65 + calc_col)}${file_idx * 3 + 3}", cell_format)  # 計算式を設定
+
             for i in range(1, len(df)):
-                worksheet.write_formula(f'N{i + 2 + file_idx * len(df)}', f"=M{i + 3 + file_idx * len(df)}*$N${file_idx * 3 + 2}+$N${file_idx * 3 + 3}", cell_format)
+                worksheet.write_formula(f'{chr(65 + calc_col)}{i + 2 + file_idx * len(df)}', f"={chr(65 + y_col)}{i + 3 + file_idx * len(df)}*${chr(65 + calc_col)}${file_idx * 3 + 2}+${chr(65 + calc_col)}${file_idx * 3 + 3}", cell_format)
 
-            # 次のデータが追加される列（O, P, Q...）
-            x_offset += 4  # 1列分（L, M）を使用した後、次はO, P, Qにデータを追加
+            # 次のデータが追加される列（P, Q, R…）
+            calc_col += 3  # 1列分を使用した後、次の列にデータを追加
 
         # グラフを作成
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
 
         # 各ファイルのXデータと補正されたYデータをグラフに追加
         for file_idx, (file_name, df) in enumerate(files_data):
-            x_start = 11 + 3 * file_idx  # 各ファイルに対応するXデータの列
-            y_start = 12 + 3 * file_idx  # 各ファイルに対応する補正後のYデータの列
+            x_col = 11 + file_idx * 4  # Xデータの列（L, P, T列…）
+            y_col = 12 + file_idx * 4  # Yデータの列（M, Q, U列…）
+            calc_col = 13 + file_idx * 4  # 計算結果の列（N, R, V列…）
+
             chart.add_series({
-                'categories': f"=Data!${chr(65 + x_start)}$3:${chr(65 + x_start)}${len(df) + 2}",
-                'values': f"=Data!${chr(65 + y_start)}$3:${chr(65 + y_start)}${len(df) + 2}",
+                'categories': f"=Data!${chr(65 + x_col)}$3:${chr(65 + x_col)}${len(df) + 2}",
+                'values': f"=Data!${chr(65 + calc_col)}$3:${chr(65 + calc_col)}${len(df) + 2}",
                 'marker': {'type': 'none'},
                 'line': {'color': '#008EC0', 'width': 1.5},  # 線の色と太さ
             })
