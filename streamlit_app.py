@@ -31,10 +31,10 @@ def convert_df_to_excel(files_data):
             worksheet.write(f'{chr(65 + x_col)}{file_idx * 3 + 2}', 'WL', cell_format)  # Xデータの列名
             worksheet.write(f'{chr(65 + y_col)}{file_idx * 3 + 2}', 'Abs', cell_format)  # Yデータの列名
 
-            # Xデータ、Yデータ、計算結果を入力
+            # Xデータ、Yデータを入力
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-                worksheet.write(i + 2 , x_col, x, cell_format)  # Xデータ
-                worksheet.write(i + 2 , y_col, y, cell_format)  # Yデータ
+                worksheet.write(i + 2, x_col, x, cell_format)  # Xデータ
+                worksheet.write(i + 2, y_col, y, cell_format)  # Yデータ
 
 
             # 計算用のN1、N2、R1、R2、V1、V2などを記入
@@ -97,8 +97,8 @@ def convert_df_to_excel(files_data):
         # グラフを配置
         worksheet.insert_chart('A3', chart)
 
-    return
-
+    output.seek(0)
+    return output.getvalue()
 
 if uploaded_files:
     files_data = []
@@ -123,7 +123,7 @@ if uploaded_files:
 
     # Excelデータを作成しダウンロード
     excel_filename = uploaded_files[0].name.replace(".txt", ".xlsx")  # 1つ目のファイル名を使用
-    excel_data = convert_df_to_excel(files_data)
+    excel_data = convert_df_to_excel(files_data)  # 修正した関数を使用
     st.download_button(
         label="Excelファイルをダウンロード",
         data=excel_data,
