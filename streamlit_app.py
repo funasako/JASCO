@@ -96,8 +96,18 @@ def convert_files_to_excel(files):
             })
 
             start_col += 4  # 次のファイルは右に4列ずらして書き込み
- 
-        chart.set_x_axis({'max': global_max_x})    
+
+        chart.set_x_axis({
+            'line': {'color': 'black', 'width': 1.5},
+            'major_tick_mark': 'inside',
+            'major_unit': 100,
+            'min': 300,
+            'max': global_max_x,
+            'reverse': False,
+            'name': 'Wavelength / nm',
+            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
+            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
+        })   
         worksheet.insert_chart("A3", chart)
     return output.getvalue()
 
