@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import io
 import xlsxwriter
 import datetime
+import pytz
+
 
 # タイトル等
 st.set_page_config(page_title="JASCO UV-vis")
@@ -157,11 +159,11 @@ def convert_files_to_excel(files):
     return output.getvalue()
 
 if uploaded_files:
-
-    # 現在の日時を取得し、フォーマットする
-    current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    # 現在の日本時間（JST）を取得
+    japan_tz = pytz.timezone('Asia/Tokyo')
+    current_time = datetime.datetime.now(japan_tz).strftime("%Y%m%d_%H%M%S")
     file_name = f"spectra_{current_time}.xlsx"
-
+    
     # Excel変換とデータ保存
     excel_data = convert_files_to_excel(uploaded_files)
     st.download_button(
