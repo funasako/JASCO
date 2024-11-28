@@ -95,7 +95,16 @@ def convert_files_to_excel(files):
     return output.getvalue()
 
 if uploaded_files:
-        # グラフの描画
+   
+    excel_data = convert_files_to_excel(uploaded_files)
+    st.download_button(
+        label="Excelファイルをダウンロード",
+        data=excel_data,
+        file_name="processed_files.xlsx",
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+
+    # グラフの描画
     st.write("### グラフ表示")
     fig, ax = plt.subplots()
 
@@ -118,11 +127,3 @@ if uploaded_files:
     ax.set_xlim(300, df["X"].max())  # 横軸の開始範囲を300に固定
     ax.legend()  # 凡例を追加
     st.pyplot(fig)
-    
-    excel_data = convert_files_to_excel(uploaded_files)
-    st.download_button(
-        label="Excelファイルをダウンロード",
-        data=excel_data,
-        file_name="processed_files.xlsx",
-        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    )
