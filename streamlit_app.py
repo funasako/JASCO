@@ -30,6 +30,13 @@ def convert_df_to_excel(files_data):
             worksheet.write(f'M{file_idx * 3 + 2}', 'Abs', cell_format)  # Yデータの列名
 
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
+                # x と y を数値に変換する
+                try:
+                    x = float(x)
+                    y = float(y)
+                except ValueError:
+                    continue  # 変換できない場合はスキップ
+
                 worksheet.write(i + 2 + file_idx * len(df), x, cell_format)  # Xデータ
                 worksheet.write(i + 2 + file_idx * len(df), x_offset + 1, y, cell_format)  # Yデータ
 
@@ -41,7 +48,7 @@ def convert_df_to_excel(files_data):
                 worksheet.write_formula(f'N{i + 2 + file_idx * len(df)}', f"=M{i + 3 + file_idx * len(df)}*$N${file_idx * 3 + 2}+$N${file_idx * 3 + 3}", cell_format)
 
             # 次のデータが追加される列（O, P, Q...）
-            x_offset += 3  # 1列分（L, M）を使用した後、次はO, P, Qにデータを追加
+            x_offset += 4  # 1列分（L, M）を使用した後、次はO, P, Qにデータを追加
 
         # グラフを作成
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
@@ -91,6 +98,8 @@ def convert_df_to_excel(files_data):
         worksheet.insert_chart('A3', chart)
 
     return output.getvalue()
+
+
 
 if uploaded_files:
     files_data = []
