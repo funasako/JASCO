@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import io
 import xlsxwriter
+import datetime
 
 # ファイルアップロード
 uploaded_files = st.file_uploader(
@@ -140,13 +141,16 @@ def convert_files_to_excel(files):
 
 if uploaded_files:
 
-    
+    # 現在の日時を取得し、フォーマットする
+    current_time = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"spectra_{current_time}.xlsx"
+
     # Excel変換とデータ保存
     excel_data = convert_files_to_excel(uploaded_files)
     st.download_button(
         label="Excelファイルをダウンロード",
         data=excel_data,
-        file_name="processed_files.xlsx",
+        file_name=file_name,  # 動的に生成したファイル名を指定
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
 
