@@ -62,6 +62,7 @@ def convert_files_to_excel(files):
         chart.set_y_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
+            'min': 0,
             'name': 'Absorbance',
             'major_gridlines': {'visible': False},
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
