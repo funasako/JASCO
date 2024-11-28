@@ -1,3 +1,16 @@
+mport streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import io
+import xlsxwriter
+
+# ファイルアップロード
+uploaded_files = st.file_uploader(
+    "テキストファイルをアップロードしてください (複数選択可能)", 
+    type=["txt"], 
+    accept_multiple_files=True
+)
+
 def convert_files_to_excel(files):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
@@ -83,3 +96,12 @@ def convert_files_to_excel(files):
         worksheet.insert_chart("A3", chart)
 
     return output.getvalue()
+
+if uploaded_files:
+    excel_data = convert_files_to_excel(uploaded_files)
+    st.download_button(
+        label="Excelファイルをダウンロード",
+        data=excel_data,
+        file_name="processed_files.xlsx",
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
