@@ -17,7 +17,9 @@ st.write("")
 uploaded_files = st.file_uploader(
     "テキストファイルをアップロード（複数可）",
     type=["txt"], 
-    accept_multiple_files=True
+    accept_multiple_files=True,
+    display_max_files_per_page=10,
+    display_uploaded_files='scroll'                          
 )
 
 def convert_files_to_excel(files):
