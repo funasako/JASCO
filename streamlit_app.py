@@ -32,9 +32,9 @@ def convert_df_to_excel(df):
         # N列の計算式を設定
         worksheet.write('N1', 1, border_format)  # N1セルに1
         worksheet.write('N2', 0, border_format)  # N2セルに0
-        worksheet.write_formula('N3', "=M3*$N$1+$N$2", border_format)  # N3セル以降に計算式を設定
+        worksheet.write_formula('N3', "=M3*$N$1+$N$2", cell_format)  # N3セル以降に計算式を設定
         for i in range(1, len(df)):
-            worksheet.write_formula(i + 2, 13, f"=M{i+3}*$N$1+$N$2", border_format)  # N列に計算式
+            worksheet.write_formula(i + 2, 13, f"=M{i+3}*$N$1+$N$2", cell_format)  # N列に計算式
 
         # グラフを作成
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
