@@ -33,7 +33,7 @@ def convert_files_to_excel(files):
             'major_tick_mark': 'inside',
             'major_unit': 100,
             'min': 300,
-            'max': df['X'].max(),
+            'max': 700,
             'reverse': False,
             'name': 'Wavelength / nm',
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
@@ -51,6 +51,7 @@ def convert_files_to_excel(files):
         
         start_col = 11  # 初期列（L列 = インデックス11）
 
+        global_max_x = 700
         for file in files:
             # ファイル名とデータの読み取り
             content = file.read().decode("shift_jis").splitlines()
@@ -74,6 +75,9 @@ def convert_files_to_excel(files):
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
                 worksheet.write(i + 2, start_col, x, cell_format)
                 worksheet.write(i + 2, start_col + 1, y, cell_format)
+                
+            # 最大Xを更新（グラフの横軸最大値の設定）
+            global_max_x = max(global_max_x, df["X"].max())
 
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
@@ -92,7 +96,8 @@ def convert_files_to_excel(files):
             })
 
             start_col += 4  # 次のファイルは右に4列ずらして書き込み
-            
+ 
+        chart.set_x_axis({'max': global_max_x})    
         worksheet.insert_chart("A3", chart)
     return output.getvalue()
 
