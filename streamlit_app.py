@@ -142,7 +142,7 @@ def convert_files_to_excel(files):
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
-        chart.set_size({'width': 500, 'height': 400})
+        chart.set_size({'width': 460, 'height': 370})
         worksheet.insert_chart("A3", chart)
 
         # 表示用グラフの装飾
