@@ -22,7 +22,7 @@ def convert_files_to_excel(files):
         cell_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12})
         border_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12, 'border': 1})
 
-        # グラフの初期設定
+        # Excelグラフの初期設定
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
         chart.set_size({'width': 533, 'height': 377})
         chart.set_chartarea({'border': {'none': True}, 'fill': {'none': True}})
@@ -57,19 +57,9 @@ def convert_files_to_excel(files):
         # すべてのデータを格納するリスト
         data_frames = []
         
-        # 重ね書きグラフの作成
+        # 表示用グラフの作成
         fig, ax = plt.subplots(figsize=(8, 6))
         
-        # グラフの装飾
-        ax.set_xlabel("Wavelength / nm", fontsize=12)
-        ax.set_ylabel("Absorbance", fontsize=12)
-        ax.set_xlim(300, max(df["X"].max() for df in data_frames))  # Xの最大値を動的に設定
-        ax.legend(loc="upper right", fontsize=10)
-        ax.grid(True)
-        ax.set_title("Overlayed Spectra", fontsize=14)
-
-
-
 
         
         for file in files:
@@ -135,6 +125,14 @@ def convert_files_to_excel(files):
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })   
         worksheet.insert_chart("A3", chart)
+
+        # 表示用グラフの装飾
+        ax.set_xlabel("Wavelength / nm", fontsize=12)
+        ax.set_ylabel("Absorbance", fontsize=12)
+        ax.set_xlim(300, global_max_x)  # Xの最大値を動的に設定
+        ax.legend(loc="upper right", fontsize=10)
+        ax.grid(True)
+        ax.set_title("Overlayed Spectra", fontsize=14)
     return output.getvalue()
 
 if uploaded_files:
