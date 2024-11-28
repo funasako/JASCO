@@ -72,4 +72,32 @@ def convert_df_to_excel(df):
     return output.getvalue()  # 自動的に保存されるので、明示的な保存は不要
 
 if uploaded_file is not None:
-   
+    content = uploaded_file.read().decode("shift_jis").splitlines()
+    xy_start = content.index("XYDATA") + 1
+    xy_end = content.index("##### Extended Information") - 2
+    xy_data_lines = content[xy_start:xy_end + 1]
+
+    data = [line.split() for line in xy_data_lines if line.strip()]
+    df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+
+    # グラフを描画
+    st.write("### グラフ表示")
+    fig, ax = plt.subplots()
+    ax.plot(df["X"], df["Y"], linewidth=1.5, color='blue')  # 線の描画
+    ax.set_xlabel("Wavelength / nm")
+    ax.set_ylabel("Absorbance")
+    ax.set_xlim(300, df["X"].max())  # 横軸の開始範囲を300に固定
+    st.pyplot(fig)
+
+    # データをテーブル表示
+    st.write("### 抽出したデータ")
+    st.dataframe(df)
+
+    # Excelデータを作成しダウンロード
+    excel_data = convert_df_to_excel(df)
+    st.download_button(
+        label="Excelファイルをダウンロード",
+        data=excel_data,
+        file_name='xydata.xlsx',
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
