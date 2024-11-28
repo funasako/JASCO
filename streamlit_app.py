@@ -14,20 +14,19 @@ def convert_df_to_excel(df):
         worksheet = workbook.add_worksheet("Data")
         writer.sheets["Data"] = worksheet
 
-        # フォント設定: すべてのセルに Times New Roman を適用
-        worksheet.set_default_row(20, {'font': {'name': 'Times New Roman'}})
-        worksheet.set_column('A:Z', 20, {'font': {'name': 'Times New Roman'}})
-
-        # データを書き込む (L3セルとM3セルから)
-        worksheet.write('L2', 'Xデータ')
-        worksheet.write('M2', 'Yデータ')
-        for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-            worksheet.write(i + 2, 11, x)  # L列 (インデックス11)
-            worksheet.write(i + 2, 12, y)  # M列 (インデックス12)
+        # フォント設定用のフォーマットを作成
+        cell_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12})
 
         # セルの高さを設定
         for i in range(len(df) + 3):
-            worksheet.set_row(i, 20)  # セルの高さを20ptに変更
+            worksheet.set_row(i, 20, cell_format)  # セルの高さを20ptに変更し、フォントを設定
+
+        # データを書き込む (L3セルとM3セルから)
+        worksheet.write('L2', 'Xデータ', cell_format)
+        worksheet.write('M2', 'Yデータ', cell_format)
+        for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
+            worksheet.write(i + 2, 11, x, cell_format)  # L列 (インデックス11)
+            worksheet.write(i + 2, 12, y, cell_format)  # M列 (インデックス12)
 
         # グラフを作成
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
