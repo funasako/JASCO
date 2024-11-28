@@ -56,9 +56,17 @@ def convert_files_to_excel(files):
 
         # すべてのデータを格納するリスト
         data_frames = []
+        
         # 重ね書きグラフの作成
         fig, ax = plt.subplots(figsize=(8, 6))
         
+        # グラフの装飾
+        ax.set_xlabel("Wavelength / nm", fontsize=12)
+        ax.set_ylabel("Absorbance", fontsize=12)
+        ax.set_xlim(300, max(df["X"].max() for df in data_frames))  # Xの最大値を動的に設定
+        ax.legend(loc="upper right", fontsize=10)
+        ax.grid(True)
+        ax.set_title("Overlayed Spectra", fontsize=14)
 
 
 
@@ -141,16 +149,6 @@ if uploaded_files:
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
 
-
-
-
-    # グラフの装飾
-    ax.set_xlabel("Wavelength / nm", fontsize=12)
-    ax.set_ylabel("Absorbance", fontsize=12)
-    ax.set_xlim(300, max(df["X"].max() for df in data_frames))  # Xの最大値を動的に設定
-    ax.legend(loc="upper right", fontsize=10)
-    ax.grid(True)
-    ax.set_title("Overlayed Spectra", fontsize=14)
     
     # Streamlitでグラフを表示
     st.pyplot(fig)
