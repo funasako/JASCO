@@ -36,8 +36,9 @@ def convert_df_to_excel(df):
 
         # グラフのプロパティ設定
         chart.set_size({'width': 533, 'height': 377})  # 幅13.3cm, 高さ10cm
-        chart.set_chartarea({'border': {'none'}, 'fill': {'none'}})  # グラフエリア
-        chart.set_plotarea({'border': {'color': 'black', 'width': 1.5}, 'fill': {'none'}})  # プロットエリア
+        chart.set_chartarea({'border': {'none': True}, 'fill': {'none': True}})
+        chart.set_plotarea({'border': {'color': 'black', 'width': 1.5}, 'fill': {'none': True}})
+
         chart.set_x_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
