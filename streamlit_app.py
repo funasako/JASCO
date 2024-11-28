@@ -142,8 +142,6 @@ if uploaded_files:
     )
 
 
-    
-    for file in uploaded_files:
 
 
     # グラフの装飾
