@@ -115,4 +115,9 @@ if uploaded_files:
 
     # Excelデータを作成しダウンロード
     excel_filename = uploaded_files[0].name.replace(".txt", ".xlsx")  # 1つ目のファイル名を使用
-    excel_data = convert
+    excel_data = convert_df_to_excel(files_data)
+    st.download_button(
+        label="Excelファイルをダウンロード",
+        data=excel_data,
+        file_name=excel_filename,
+        mime='application/vnd.openxmlformats-officedocument.spreadsheet
