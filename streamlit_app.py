@@ -20,6 +20,15 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True                         
 )
 
+# Excel列ずらし対応
+def col_num_to_excel_col(n):
+    """Convert a 0-based column number to Excel-style column label (e.g., 0 -> 'A', 27 -> 'AB')"""
+    result = ""
+    while n >= 0:
+        result = chr(n % 26 + 65) + result
+        n = n // 26 - 1
+    return result
+
 def convert_files_to_excel(files):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
@@ -107,15 +116,15 @@ def convert_files_to_excel(files):
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
             worksheet.write(1, start_col + 2, 0, border_format)
-            worksheet.write_formula(2, start_col + 2, f"={chr(65 + start_col + 1)}3*${chr(65 + start_col + 2)}$1+${chr(65 + start_col + 2)}$2", cell_format)
+            worksheet.write_formula(2, start_col + 2, f"={col_num_to_excel_col(start_col + 1)}3*${col_num_to_excel_col(start_col + 2)}$1+${col_num_to_excel_col(start_col + 2)}$2", cell_format)
             for i in range(1, len(df)):
-                worksheet.write_formula(i + 2, start_col + 2, f"={chr(65 + start_col + 1)}{i+3}*${chr(65 + start_col + 2)}$1+${chr(65 + start_col + 2)}$2", cell_format)
+                worksheet.write_formula(i + 2, start_col + 2, f"={col_num_to_excel_col(start_col + 1)}{i+3}*${col_num_to_excel_col(start_col + 2)}$1+${col_num_to_excel_col(start_col + 2)}$2", cell_format)
 
             # グラフを作成
 
             chart.add_series({
-                'categories': f"=Data!${chr(65 + start_col)}$3:${chr(65 + start_col)}${len(df) + 2}",
-                'values': f"=Data!${chr(65 + start_col + 2)}$3:${chr(65 + start_col + 2)}${len(df) + 2}",
+                'categories': f"=Data!${col_num_to_excel_col(start_col)}$3:${col_num_to_excel_col(start_col)}${len(df) + 2}",
+                'values': f"=Data!${col_num_to_excel_col(start_col + 2)}$3:${col_num_to_excel_col(start_col + 2)}${len(df) + 2}",
                 'marker': {'type': 'none'},
                 'line': {'color': '#008EC0', 'width': 1.5},
             })
