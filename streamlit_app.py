@@ -95,6 +95,30 @@ def convert_files_to_excel(files):
     return output.getvalue()
 
 if uploaded_files:
+        # グラフの描画
+    st.write("### グラフ表示")
+    fig, ax = plt.subplots()
+
+    colors = ['#008EC0', '#FF5733', '#33FF57', '#FFC300', '#C70039']  # プロットの色を設定
+    for i, file in enumerate(uploaded_files):
+        # ファイルデータの読み取り
+        content = file.read().decode("shift_jis").splitlines()
+        xy_start = content.index("XYDATA") + 1
+        xy_end = content.index("##### Extended Information") - 2
+        xy_data_lines = content[xy_start:xy_end + 1]
+
+        data = [line.split() for line in xy_data_lines if line.strip()]
+        df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+
+        # グラフにプロット
+        ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5, color=colors[i % len(colors)])
+
+    ax.set_xlabel("Wavelength / nm")
+    ax.set_ylabel("Absorbance")
+    ax.set_xlim(300, df["X"].max())  # 横軸の開始範囲を300に固定
+    ax.legend()  # 凡例を追加
+    st.pyplot(fig)
+    
     excel_data = convert_files_to_excel(uploaded_files)
     st.download_button(
         label="Excelファイルをダウンロード",
