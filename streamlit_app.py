@@ -132,7 +132,6 @@ def convert_files_to_excel(files):
         ax.set_xlim(300, global_max_x)  # Xの最大値を動的に設定
         ax.legend(loc="upper right", fontsize=10)
         ax.grid(True)
-        ax.set_title("Overlayed Spectra", fontsize=14)
 
         # Streamlitでグラフを表示
         st.pyplot(fig)
