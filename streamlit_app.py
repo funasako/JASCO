@@ -14,22 +14,22 @@ def convert_df_to_excel(df):
         worksheet = workbook.add_worksheet("Data")
         writer.sheets["Data"] = worksheet
 
-        # データを書き込む (J3セルとK3セルから)
-        worksheet.write('J2', 'Xデータ')
-        worksheet.write('K2', 'Yデータ')
+        # データを書き込む (L3セルとM3セルから)
+        worksheet.write('L2', 'Xデータ')
+        worksheet.write('M2', 'Yデータ')
         for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-            worksheet.write(i + 2, 9, x)  # J列 (インデックス9)
-            worksheet.write(i + 2, 10, y)  # K列 (インデックス10)
+            worksheet.write(i + 2, 11, x)  # L列 (インデックス11)
+            worksheet.write(i + 2, 12, y)  # M列 (インデックス12)
 
         # セルの高さを設定
         for i in range(len(df) + 3):
-            worksheet.set_row(i, 21)
+            worksheet.set_row(i, 20)  # セルの高さを20ptに変更
 
         # グラフを作成
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
         chart.add_series({
-            'categories': f"=Data!$J$3:$J${len(df) + 2}",
-            'values': f"=Data!$K$3:$K${len(df) + 2}",
+            'categories': f"=Data!$L$3:$L${len(df) + 2}",
+            'values': f"=Data!$M$3:$M${len(df) + 2}",
             'marker': {'type': 'none'},
             'line': {'color': 'blue'},  # 単色の線
         })
@@ -67,9 +67,11 @@ if uploaded_file is not None:
     # グラフを描画
     st.write("### グラフ表示")
     fig, ax = plt.subplots()
-    ax.plot(df["X"], df["Y"], label="XY Data", linewidth=1.5)  # 線の描画
+    ax.plot(df["X"], df["Y"], linewidth=1.5, color='blue')  # 線の描画
     ax.set_xlabel("Wavelength / nm")
     ax.set_ylabel("Absorbance")
+    ax.set_xlim(df["X"].min(), df["X"].max())  # 横軸の範囲をデータに合わせる
+    ax.set_ylim(df["Y"].min(), df["Y"].max())  # 縦軸の範囲をデータに合わせる
     st.pyplot(fig)
 
     # データをテーブル表示
