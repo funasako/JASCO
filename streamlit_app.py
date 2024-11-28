@@ -7,7 +7,7 @@ uploaded_file = st.file_uploader("テキストファイルをアップロード�
 
 if uploaded_file is not None:
     # ファイルを読み込む
-    content = uploaded_file.read().decode("utf-8").splitlines()
+    content = uploaded_file.read().decode("shift_jis").splitlines()
 
     # XYデータを抽出
     xy_start = content.index("XYDATA") + 1
