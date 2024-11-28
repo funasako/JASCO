@@ -42,7 +42,7 @@ def convert_df_to_excel(df):
             'categories': f"=Data!$L$3:$L${len(df) + 2}",
             'values': f"=Data!$N$3:$N${len(df) + 2}",  # 新たに計算されたN列を使用
             'marker': {'type': 'none'},
-            'line': {'color': 'blue'},  # 単色の線
+            'line': {'color': '#008EC0'},  # プロットの線の色を#008EC0に変更
         })
 
         # グラフのプロパティ設定
@@ -94,7 +94,7 @@ if uploaded_file is not None:
     # グラフを描画
     st.write("### グラフ表示")
     fig, ax = plt.subplots()
-    ax.plot(df["X"], df["Y"], linewidth=1.5, color='blue')  # 線の描画
+    ax.plot(df["X"], df["Y"], linewidth=1.5, color='#008EC0')  # プロットの線の色を#008EC0に変更
     ax.set_xlabel("Wavelength / nm")
     ax.set_ylabel("Absorbance")
     ax.set_xlim(300, df["X"].max())  # 横軸の開始範囲を300に固定
