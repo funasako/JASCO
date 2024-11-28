@@ -22,10 +22,8 @@ if uploaded_file is not None:
     st.write("### グラフ表示")
     fig, ax = plt.subplots()
     ax.plot(df["X"], df["Y"], label="XY Data")
-    ax.set_xlabel("X (NANOMETERS)")
-    ax.set_ylabel("Y (ABSORBANCE)")
-    ax.set_title("XYデータプロット")
-    ax.legend()
+    ax.set_xlabel("Wavelength / nm")
+    ax.set_ylabel("Absorbance")
     st.pyplot(fig)
 
     # データをテーブル表示
