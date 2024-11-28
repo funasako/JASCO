@@ -14,6 +14,10 @@ def convert_df_to_excel(df):
         worksheet = workbook.add_worksheet("Data")
         writer.sheets["Data"] = worksheet
 
+        # フォント設定: すべてのセルに Times New Roman を適用
+        worksheet.set_default_row(20, {'font': {'name': 'Times New Roman'}})
+        worksheet.set_column('A:Z', 20, {'font': {'name': 'Times New Roman'}})
+
         # データを書き込む (L3セルとM3セルから)
         worksheet.write('L2', 'Xデータ')
         worksheet.write('M2', 'Yデータ')
@@ -94,10 +98,12 @@ if uploaded_file is not None:
     st.dataframe(df)
 
     # Excelデータを作成しダウンロード
+    # アップロードされたファイル名を取得し、拡張子を.xlsxに変更
+    excel_filename = uploaded_file.name.replace(".txt", ".xlsx")
     excel_data = convert_df_to_excel(df)
     st.download_button(
         label="Excelファイルをダウンロード",
         data=excel_data,
-        file_name='xydata.xlsx',
+        file_name=excel_filename,
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
