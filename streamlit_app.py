@@ -52,17 +52,17 @@ def convert_df_to_excel(df):
             'reverse': False,
             'name': 'Wavelength / nm',  # 横軸ラベルを設定
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'}, #数値のフォント設定
-            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'}, #ラベルのフォント設定
+            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False}, #ラベルのフォント設定（太字解除）
         })
 
         # 縦軸設定
         chart.set_y_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
-            'name': 'Absorbance (arb units.)',  # 縦軸ラベルを設定
+            'name': 'Absorbance',  # 縦軸ラベルを設定
             'major_gridlines': {'visible': False},  # 縦軸の目盛線を削除
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'}, #数値のフォント設定
-            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial'}, #ラベルのフォント設定
+            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False}, #ラベルのフォント設定（太字解除）
         })
 
         # グラフを配置
