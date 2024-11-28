@@ -34,10 +34,12 @@ def convert_df_to_excel(files_data):
             # Xデータ、Yデータ、計算結果を入力
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
                 try:
+                    # XデータとYデータを数値に変換
                     x = float(x)
                     y = float(y)
                 except ValueError:
-                    continue  # 変換できない場合はスキップ
+                    # 数値に変換できない場合はその行をスキップ
+                    continue
 
                 worksheet.write(i + 2 + file_idx * len(df), x, cell_format)  # Xデータ
                 worksheet.write(i + 2 + file_idx * len(df), y_col, y, cell_format)  # Yデータ
