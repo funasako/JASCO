@@ -16,23 +16,30 @@ def convert_df_to_excel(df):
 
         # フォント設定用のフォーマットを作成
         cell_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12})
-
+        bold_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12, 'bold': True})
+        border_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12, 'border': 1})
+        
         # セルの高さを設定
         for i in range(len(df) + 3):
             worksheet.set_row(i, 20, cell_format)  # セルの高さを20ptに変更し、フォントを設定
 
         # データを書き込む (L3セルとM3セルから)
-        worksheet.write('L2', 'Xデータ', cell_format)
-        worksheet.write('M2', 'Yデータ', cell_format)
+        worksheet.write('L2', 'WL', bold_format)  # L2セルの「Xデータ」を「WL」に変更
+        worksheet.write('M2', 'Abs', bold_format)  # M3セルの「Yデータ」を「Abs」に変更
         for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
             worksheet.write(i + 2, 11, x, cell_format)  # L列 (インデックス11)
             worksheet.write(i + 2, 12, y, cell_format)  # M列 (インデックス12)
 
         # N列の計算式を設定
-        worksheet.write('N1', 1, cell_format)  # N1セルに1
-        worksheet.write('N2', 0, cell_format)  # N2セルに0
-        for i in range(len(df)):
-            worksheet.write_formula(i + 2, 13, f"=M{i+3}*$N$1+$N$2", cell_format)  # N列に計算式
+        worksheet.write('N1', 1, border_format)  # N1セルに1
+        worksheet.write('N2', 0, border_format)  # N2セルに0
+        worksheet.write_formula('N3', "=M3*$N$1+$N$2", border_format)  # N3セル以降に計算式を設定
+        for i in range(1, len(df)):
+            worksheet.write_formula(i + 2, 13, f"=M{i+3}*$N$1+$N$2", border_format)  # N列に計算式
+
+        # N1, N2セルの罫線を格子に設定
+        worksheet.set_row(0, None, border_format)  # N1セルの罫線
+        worksheet.set_row(1, None, border_format)  # N2セルの罫線
 
         # グラフを作成
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
