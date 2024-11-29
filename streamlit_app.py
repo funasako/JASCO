@@ -9,6 +9,7 @@ import pytz
 
 # タイトル等
 st.set_page_config(page_title="JASCO UV-vis")
+st.write("test")
 st.title("JASCO UV-vis Spectra Formatter")
 st.write("1. スペクトルマネージャーでテキスト形式でエクスポート（ファイル名をしっかりつけておく）")
 st.write("2. 以下にアップロードする。複数アップロードでプロット重ね書き")
