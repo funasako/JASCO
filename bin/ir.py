@@ -179,7 +179,8 @@ def convert_files_to_excel(files):
             'min': 500,
             'max': 4000,
             'reverse': True,
-            'name': r'$\mathrm{Wavenumber / cm^{-1}}$',
+            'crossing': 4000,
+            'name': 'Wavenumber / cm⁻¹',
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
