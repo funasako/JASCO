@@ -12,9 +12,7 @@ st.set_page_config(page_title="JASCO UV-vis Spectra Formatter")
 st.title("JASCO UV-vis Spectra Formatter")
 st.markdown("""
 ### 使い方
-
-<p style = "color; red">※動作にはインターネット接続が必要です。</p>
-
+<p style = "color: red;">※動作にはインターネット接続が必要です。</p>
 1. 装置が書き出したテキスト形式ファイルを用意する、もしくは、スペクトルマネージャーでテキストファイルをエクスポートする（ファイル名をしっかりつけておく）
 2. 以下にドラッグ&ドロップしてアップロードする。複数アップロードでプロット重ね書きが可能
 3. Excelファイルをダウンロード
