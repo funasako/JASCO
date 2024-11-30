@@ -9,8 +9,8 @@ import os
 
 
 # タイトル等
-st.set_page_config(page_title="JASCO UV-vis Spectra Formatter")
-st.title("JASCO IR Spectra Formatter")
+st.set_page_config(page_title="IR | JASCO Spectra Formatter")
+st.title("IR | JASCO Spectra Formatter")
 st.write("※動作にはインターネット接続が必要です。")
 st.write("1. 装置が書き出したテキスト形式ファイルを用意する、もしくは、スペクトルマネージャーでテキストファイルをエクスポートする（ファイル名をしっかりつけておく）")
 st.write("2. 以下にドラッグ&ドロップしてグラフ表示。複数ファイルからプロット重ね書きも可能")
