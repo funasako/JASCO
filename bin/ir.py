@@ -9,11 +9,7 @@ import os
 
 
 # タイトル等
-st.set_page_config(
-    page_title="IR | JASCO Spectra Formatter",
-    page_icon=":bar_chart:", 
-    layout="wide", 
-)
+st.set_page_config(page_title="IR | JASCO Spectra Formatter", page_icon=":bar_chart:", )
 st.title("IR | JASCO Spectra Formatter")
 st.write("※動作にはインターネット接続が必要です。")
 st.write("1. 装置が書き出したテキスト形式ファイルを用意する、もしくは、スペクトルマネージャーでテキストファイルをエクスポートする（ファイル名をしっかりつけておく）")
