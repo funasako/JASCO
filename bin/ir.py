@@ -167,6 +167,7 @@ def convert_files_to_excel(files):
             chart.add_series({
                 'categories': categories_range,
                 'values': values_range,
+                'name': file.name,
                 'marker': {'type': 'none'},
                 'line': {'color': '#008EC0', 'width': 1.5},
             })
