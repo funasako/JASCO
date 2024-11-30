@@ -167,9 +167,13 @@ def convert_files_to_excel(files):
             categories_range = "=Data!$" + col_categories + "$3:$" + col_categories + "$" + str(len(df) + 2)
             values_range = "=Data!$" + col2 + "$3:$" + col2 + "$" + str(len(df) + 2)
 
+            # ファイル名から拡張子を除去
+            filename_noext = os.path.splitext(file.name)[0]
+
             chart.add_series({
                 'categories': categories_range,
                 'values': values_range,
+                'name': filename_noext,
                 'marker': {'type': 'none'},
                 'line': {'color': '#008EC0', 'width': 1.5},
             })
