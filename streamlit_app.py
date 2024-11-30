@@ -8,16 +8,17 @@ import pytz
 
 
 # タイトル等
-st.set_page_config(page_title="JASCO UV-vis")
+st.set_page_config(page_title="JASCO UV-vis Spectra Formatter")
 st.title("JASCO UV-vis Spectra Formatter")
-st.write("1. スペクトルマネージャーでテキスト形式でエクスポート（ファイル名をしっかりつけておく）")
-st.write("2. 以下にアップロードする。複数アップロードでプロット重ね書き")
+st.write("1. スペクトルマネージャーでtxtファイルをエクスポート（ファイル名をしっかりつけておく）")
+st.write("2. 以下にドラッグ&ドロップでアップロードする。複数アップロードでプロット重ね書きが可能")
 st.write("3. Excelファイルをダウンロード")
+st.write("4. 別のExcelファイルを作成する場合は、ページを再読込するかアップロード済みファイルをすべて✕ボタンで削除する")
 st.write("")
 
 # ファイルアップロード
 uploaded_files = st.file_uploader(
-    "テキストファイルをアップロード（複数可）",
+    "エクスポートしたtxtファイルをアップロード（複数可）",
     type=["txt"], 
     accept_multiple_files=True                         
 )
@@ -31,6 +32,31 @@ def col_num_to_excel_col(n):
         n = n // 26 - 1
     return result
 
+def extract_xy_data(content):
+    # XYDATAの開始行を取得
+    xy_start = content.index("XYDATA") + 1
+    
+    # 終了地点を特定する
+    xy_end = None
+    
+    # 1. '##### Extended Information'があれば、その2行上
+    extended_info_index = next((i for i, line in enumerate(content) if '##### Extended Information' in line), None)
+    if extended_info_index is not None:
+        xy_end = extended_info_index - 2  # 2行上にする
+    else:
+        # 2. 空行があれば、その1行上
+        empty_line_index = next((i for i, line in enumerate(content) if line.strip() == ""), None)
+        if empty_line_index is not None:
+            xy_end = empty_line_index - 1  # 1行上にする
+        else:
+            # 3. 上記どちらでもない場合は、ファイルの最終行
+            xy_end = len(content) - 1  # 最終行
+    
+    # データを抽出
+    xy_data_lines = content[xy_start:xy_end + 1]
+    
+    return xy_data_lines
+
 def convert_files_to_excel(files):
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
@@ -39,8 +65,9 @@ def convert_files_to_excel(files):
         writer.sheets["Data"] = worksheet
 
         # フォント設定用のフォーマットを作成
-        cell_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12})
-        border_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 12, 'border': 1})
+        cell_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 11})
+        border_format = workbook.add_format({'font_name': 'Times New Roman', 'font_size': 11, 'border': 1})
+        filename_format = workbook.add_format({'font_color': 'blue', 'font_name': 'Times New Roman', 'font_size': 11})
 
         # Excelグラフの初期設定
         chart = workbook.add_chart({'type': 'scatter', 'subtype': 'smooth'})
@@ -85,9 +112,8 @@ def convert_files_to_excel(files):
         for file in files:
             # ファイル名とデータの読み取り
             content = file.read().decode("shift_jis").splitlines()
-            xy_start = content.index("XYDATA") + 1
-            xy_end = content.index("##### Extended Information") - 2
-            xy_data_lines = content[xy_start:xy_end + 1]
+            # データ抽出関数を使用
+            xy_data_lines = extract_xy_data(content)
 
             data = [line.split() for line in xy_data_lines if line.strip()]
             df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
@@ -103,7 +129,7 @@ def convert_files_to_excel(files):
                 worksheet.set_row(i, 20, cell_format)
 
             # ファイル名を記入
-            worksheet.write(0, start_col, file.name, cell_format)
+            worksheet.write(0, start_col, file.name, filename_format)
 
             # データを書き込む
             worksheet.write(1, start_col, 'WL', cell_format)
@@ -118,15 +144,31 @@ def convert_files_to_excel(files):
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
             worksheet.write(1, start_col + 2, 0, border_format)
-            worksheet.write_formula(2, start_col + 2, f"={col_num_to_excel_col(start_col + 1)}3*${col_num_to_excel_col(start_col + 2)}$1+${col_num_to_excel_col(start_col + 2)}$2", cell_format)
-            for i in range(1, len(df)):
-                worksheet.write_formula(i + 2, start_col + 2, f"={col_num_to_excel_col(start_col + 1)}{i+3}*${col_num_to_excel_col(start_col + 2)}$1+${col_num_to_excel_col(start_col + 2)}$2", cell_format)
+            
+            # stlite対応の文字列操作
+            col1 = col_num_to_excel_col(start_col + 1)
+            col2 = col_num_to_excel_col(start_col + 2)
+            formula = "=" + col1 + "3*$" + col2 + "$1+$" + col2 + "$2"
+            worksheet.write_formula(2, start_col + 2, formula, cell_format)
+            
+            # 列名を事前に計算
+            col1 = col_num_to_excel_col(start_col + 1)
+            col2 = col_num_to_excel_col(start_col + 2)
+            col_categories = col_num_to_excel_col(start_col)
 
+            # ループ内のformula
+            for i in range(1, len(df)):
+                formula = "=" + col1 + str(i + 3) + "*$" + col2 + "$1+$" + col2 + "$2"
+                worksheet.write_formula(i + 2, start_col + 2, formula, cell_format)
+                
             # グラフを作成
+            # stlite対応の文字列操作
+            categories_range = "=Data!$" + col_categories + "$3:$" + col_categories + "$" + str(len(df) + 2)
+            values_range = "=Data!$" + col2 + "$3:$" + col2 + "$" + str(len(df) + 2)
 
             chart.add_series({
-                'categories': f"=Data!${col_num_to_excel_col(start_col)}$3:${col_num_to_excel_col(start_col)}${len(df) + 2}",
-                'values': f"=Data!${col_num_to_excel_col(start_col + 2)}$3:${col_num_to_excel_col(start_col + 2)}${len(df) + 2}",
+                'categories': categories_range,
+                'values': values_range,
                 'marker': {'type': 'none'},
                 'line': {'color': '#008EC0', 'width': 1.5},
             })
@@ -145,7 +187,7 @@ def convert_files_to_excel(files):
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
         chart.set_size({'width': 460, 'height': 370})
-        worksheet.insert_chart("A3", chart)
+        worksheet.insert_chart("A4", chart)
 
         # 表示用グラフの装飾
         ax.set_xlabel("Wavelength / nm", fontsize=12)
@@ -173,5 +215,3 @@ if uploaded_files:
         file_name=file_name,  # 動的に生成したファイル名を指定
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
-
-    
