@@ -11,7 +11,7 @@ import os
 # タイトル等
 st.set_page_config(
     page_title="IR | JASCO Spectra Formatter",
-    page_icon=favicon, 
+    page_icon=":bar_chart:", 
     layout="wide", 
 )
 st.title("IR | JASCO Spectra Formatter")
