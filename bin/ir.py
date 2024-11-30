@@ -79,27 +79,26 @@ def convert_files_to_excel(files):
         chart.set_x_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
-            'major_unit': 100,
-            'min': 300,
-            'max': 700,
-            'reverse': False,
-            'name': 'Wavelength / nm',
+            'major_unit': 500,
+            'min': 500,
+            'max': 4000,
+            'reverse': True,
+            'name': r'$\mathrm{Wavenumber / cm^{-1}}$',
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
         chart.set_y_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
-            'min': 0,
-            'name': 'Absorbance',
+            'max': 100,
+            'name': 'Transmittance (%)',
             'major_gridlines': {'visible': False},
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
         
         start_col = 11  # 初期列（L列 = インデックス11）
-        
-        global_max_x = 700
+    
 
 
         # すべてのデータを格納するリスト
@@ -138,9 +137,6 @@ def convert_files_to_excel(files):
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
                 worksheet.write(i + 2, start_col, x, cell_format)
                 worksheet.write(i + 2, start_col + 1, y, cell_format)
-                
-            # 最大Xを更新（グラフの横軸最大値の設定）
-            global_max_x = max(global_max_x, df["X"].max())
 
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
@@ -179,21 +175,22 @@ def convert_files_to_excel(files):
         chart.set_x_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
-            'major_unit': 100,
-            'min': 300,
-            'max': global_max_x,
-            'reverse': False,
-            'name': 'Wavelength / nm',
+            'major_unit': 500,
+            'min': 500,
+            'max': 4000,
+            'reverse': True,
+            'name': r'$\mathrm{Wavenumber / cm^{-1}}$',
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
-        chart.set_size({'width': 460, 'height': 370})
+        chart.set_size({'width': 460, 'height': 460})
         worksheet.insert_chart("A4", chart)
 
         # 表示用グラフの装飾
+        ax.invert_xaxis()
         ax.set_xlabel(r'$\mathrm{Wavenumber / cm^{-1}}$', fontsize=12)
         ax.set_ylabel("Transmittance (%)", fontsize=12)
-        ax.set_xlim(300, global_max_x)  # Xの最大値を動的に設定
+        ax.set_xlim(500, 4000) 
         ax.legend(loc="upper right", fontsize=10)
         ax.grid(True)
 
