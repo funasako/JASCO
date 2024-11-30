@@ -8,7 +8,7 @@ import pytz
 
 
 # タイトル等
-st.set_page_config(page_title="UV-vis | JASCO Spectra Formatter")
+st.set_page_config(page_title="UV-vis | JASCO Spectra Formatter", page_icon=":bar_chart:", )
 st.title("UV-vis | JASCO Spectra Formatter")
 st.write("※動作にはインターネット接続が必要です。")
 st.write("1. 装置が書き出したテキスト形式ファイルを用意する、もしくは、スペクトルマネージャーでテキストファイルをエクスポートする（ファイル名をしっかりつけておく）")
