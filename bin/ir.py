@@ -191,7 +191,7 @@ def convert_files_to_excel(files):
         worksheet.insert_chart("A4", chart)
 
         # 表示用グラフの装飾
-        ax.set_xlabel(r"Wavenumber / cm^{-1}", fontsize=12)
+        ax.set_xlabel(r"Wavenumber / $cm^{-1}$", fontsize=12)
         ax.set_ylabel("Transmittance (%)", fontsize=12)
         ax.set_xlim(300, global_max_x)  # Xの最大値を動的に設定
         ax.legend(loc="upper right", fontsize=10)
