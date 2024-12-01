@@ -150,7 +150,7 @@ def convert_files_to_excel(files):
             worksheet.write(1, start_col + 2, overlayconst, border_format)
 
             # カウンタ増加
-            now_file = now_file + 1
+            now_file += 1
             
             # stlite対応の文字列操作
             col1 = col_num_to_excel_col(start_col + 1)
