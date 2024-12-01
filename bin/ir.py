@@ -184,7 +184,9 @@ def convert_files_to_excel(files):
         })
         chart.set_y_axis({
             'line': {'color': 'black', 'width': 1.5},
-            'major_tick_mark': 'inside',
+            'major_tick_mark': 'none',  # 主目盛を非表示
+            'minor_tick_mark': 'none',  # 補助目盛を非表示
+            'label_position': 'none',  # ラベルを非表示
             'max': (num_files - 1) * 40 + 110,
             'min': xlsxYmin,
             'crossing': -1000,
