@@ -32,25 +32,20 @@ def col_num_to_excel_col(n):
         result = chr(n % 26 + 65) + result
         n = n // 26 - 1
     return result
-
 def extract_xy_data(content):
-    # XYDATAの開始行を取得
-    xy_start = content.index("XYDATA") + 1
-    
-    # 終了地点を特定する
-    xy_end = None
-    
-    # 1. '##### Extended Information'があれば、その2行上
+    xy_start = content.index("XYDATA") + 1 #開始行は固定
+    xy_end = None #終了行は以下のように分岐    
+    # '##### Extended Information'があれば、その2行上
     extended_info_index = next((i for i, line in enumerate(content) if '##### Extended Information' in line), None)
     if extended_info_index is not None:
         xy_end = extended_info_index - 2  # 2行上にする
     else:
-        # 2. 空行があれば、その1行上
+        # 空行があれば、その1行上
         empty_line_index = next((i for i, line in enumerate(content) if line.strip() == ""), None)
         if empty_line_index is not None:
             xy_end = empty_line_index - 1  # 1行上にする
         else:
-            # 3. 上記どちらでもない場合は、ファイルの最終行
+            # 上記どちらでもない場合は、ファイルの最終行
             xy_end = len(content) - 1  # 最終行
     
     # データを抽出
@@ -211,7 +206,7 @@ if uploaded_files:
     # 現在の日本時間（JST）を取得
     japan_tz = pytz.timezone('Asia/Tokyo')
     current_time = datetime.datetime.now(japan_tz).strftime("%Y%m%d_%H%M%S")
-    file_name = f"spectra_{current_time}.xlsx"
+    file_name = f"UV-vis_{current_time}.xlsx"
     
     # Excel変換とデータ保存
     excel_data = convert_files_to_excel(uploaded_files)
