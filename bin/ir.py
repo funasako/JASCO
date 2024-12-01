@@ -164,6 +164,7 @@ def convert_files_to_excel(files):
                 'name': filename_noext,
                 'marker': {'type': 'none'},
                 'line': {'color': '#008EC0', 'width': 1.5},
+                'title': None,
             })
             
             # 表示用グラフにプロットを追加
