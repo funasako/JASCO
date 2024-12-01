@@ -194,6 +194,10 @@ def convert_files_to_excel(files):
             'major_gridlines': {'visible': False},
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
+            'name_layout': {  # 軸ラベルの位置を調整
+                'x': -2.00,  # X方向オフセット（負の値で左へ移動）
+                'y': 0.5,    # Y方向オフセット（0が中央、1が下端）
+            },
         })
         chart.set_size({'width': 460, 'height': 370 + 80 * num_files})
         chart.set_legend({'none': True})
