@@ -87,7 +87,7 @@ def convert_files_to_excel(files):
         data_frames = []
         
         # 表示用グラフの作成
-        fig, ax = plt.subplots(figsize=(8, 6))
+        fig, ax = plt.subplots(figsize=(8, 8))
         
         # ファイル処理ループの前に、ファイル数を取得
         num_files = len(uploaded_files)
@@ -203,6 +203,7 @@ def convert_files_to_excel(files):
         ax.set_xlabel(r'$\mathrm{Wavenumber / cm^{-1}}$', fontsize=12)
         ax.set_ylabel("Transmittance (%)", fontsize=12)
         ax.set_xlim(500, 4000) 
+        ax.set_ylim(0, (num_files - 1) * 40 + 110) 
         ax.legend(loc="lower left", fontsize=10)
         ax.grid(True)
         ax.invert_xaxis()
