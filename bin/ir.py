@@ -20,7 +20,7 @@ st.write("4. 別のExcelファイルを作成する場合は、ページを再�
 st.write("")
 
 # 変数初期化
-xlsxymin = None
+xlsxYmin = None
 
 # ファイルアップロード
 uploaded_files = st.file_uploader(
@@ -106,7 +106,7 @@ def convert_files_to_excel(files):
 
             # 1ファイル目の%T最小値を保持
             if i == 0:
-                xlsxymin = df["Y"].min
+                xlsxYmin = math.floor(df["Y"].min / 10) * 10 - 10
             
             # グラフにプロットを追加
             ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
@@ -171,6 +171,7 @@ def convert_files_to_excel(files):
             start_col += 4  # 次のファイルは右に4列ずらして書き込み
             # ループ終了
 
+        graphymin = math.floor(xlsxymin / 10) * 10 - 10
         # Excelグラフ書式修正
         chart.set_x_axis({
             'line': {'color': 'black', 'width': 1.5},
@@ -188,7 +189,7 @@ def convert_files_to_excel(files):
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
             'max': (num_files - 1) * 40 + 110,
-            'min': math.floor(xlsxymin / 10) * 10 - 10,
+            'min': xlsxYmin,
             'crossing': -1000,
             'name': 'Transmittance (%)',
             'major_gridlines': {'visible': False},
