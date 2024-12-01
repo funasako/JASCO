@@ -194,10 +194,15 @@ def convert_files_to_excel(files):
             'major_gridlines': {'visible': False},
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
-            'name_layout': {  # 軸ラベルの位置を調整
-                'x': -0.3,  # X方向オフセット（負の値で左へ移動）
-                'y': 0.5,    # Y方向オフセット（0が中央、1が下端）
-            },
+        })
+        # プロットエリアの位置を調整
+        chart.set_plotarea({
+            'layout': {
+                'x': 0.2,  # プロットエリアの左端を右に移動
+                'y': 0.15,  # 必要に応じて縦方向も調整
+                'width': 0.7,  # プロットエリアの幅
+                'height': 0.7,  # プロットエリアの高さ
+            }
         })
         chart.set_size({'width': 460, 'height': 370 + 80 * num_files})
         chart.set_legend({'none': True})
