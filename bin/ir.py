@@ -146,13 +146,12 @@ def convert_files_to_excel(files):
             
             # 書き込む値を計算
             value_to_write = processing_index * 40
-            
-            # 既存の書き込み処理を修正
-            worksheet.write(0, start_col + 2, value_to_write, border_format)
+            print(f"File {i+1}/{num_files}, Processing Index: {processing_index}, Value: {value_to_write}")
+
 
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
-            worksheet.write(1, start_col + 2, overlayconst, border_format)
+            worksheet.write(1, start_col + 2, value_to_write, border_format)
             
             # stlite対応の文字列操作
             col1 = col_num_to_excel_col(start_col + 1)
