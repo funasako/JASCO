@@ -6,6 +6,7 @@ import xlsxwriter
 import datetime
 import pytz
 import os
+import math
 
 
 # タイトル等
@@ -17,6 +18,9 @@ st.write("2. 以下にドラッグ&ドロップしてグラフ表示。複数フ
 st.write("3. Excelファイルをダウンロード")
 st.write("4. 別のExcelファイルを作成する場合は、ページを再読込するかアップロード済みファイルをすべて✕ボタンで削除する")
 st.write("")
+
+# 変数初期化
+xlsxymin = None
 
 # ファイルアップロード
 uploaded_files = st.file_uploader(
@@ -99,7 +103,11 @@ def convert_files_to_excel(files):
             df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
             # データフレーム化
             data_frames.append(df)
-    
+
+            # 1ファイル目の%T最小値を保持
+            if i == 0:
+            xlsxymin = min(y)
+            
             # グラフにプロットを追加
             ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
 
@@ -113,7 +121,7 @@ def convert_files_to_excel(files):
 
             # データを書き込む
             worksheet.write(1, start_col, 'WL', cell_format)
-            worksheet.write(1, start_col + 1, 'Abs', cell_format)
+            worksheet.write(1, start_col + 1, '%T', cell_format)
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
                 worksheet.write(i + 2, start_col, x, cell_format)
                 worksheet.write(i + 2, start_col + 1, y, cell_format)
@@ -180,6 +188,7 @@ def convert_files_to_excel(files):
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
             'max': (num_files - 1) * 40 + 110,
+            'min': math.floor(xlxsymin / 10) * 10 - 10
             'crossing': -1000,
             'name': 'Transmittance (%)',
             'major_gridlines': {'visible': False},
