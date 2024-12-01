@@ -40,7 +40,10 @@ def col_num_to_excel_col(n):
 
 # テキストファイルのデータ構造分析
 def extract_xy_data(content):
-    xy_start = content.index("XYDATA") + 1 #開始行は固定
+    try:
+        xy_start = content.index("XYDATA") + 1  # "XYDATA"の位置を検索
+    except ValueError:
+        raise ValueError("日本分光のスペクトルファイルではないようです。")
     xy_end = None #終了行は以下のように分岐    
     # '##### Extended Information'があれば、その2行上
     extended_info_index = next((i for i, line in enumerate(content) if '##### Extended Information' in line), None)
@@ -93,81 +96,86 @@ def convert_files_to_excel(files):
         now_file = 1
         
         for i, file in enumerate(uploaded_files):
-            # ファイル名とデータの読み取り
-            content = file.read().decode("shift_jis").splitlines()
-            
-            # XYデータを抽出してDataFrameに追加
-            xy_data_lines = extract_xy_data(content)
-            data = [line.split() for line in xy_data_lines if line.strip()]
-            df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
-            data_frames.append(df)
-
-            # %T最小値を保持
-            xlsxYmin = math.floor(df.loc[104:, "Y"].min() / 10) * 10 - 10
-                       
-            # セルの高さを設定
-            for i in range(len(df) + 3):
-                worksheet.set_row(i, 20, cell_format)
-
-            # ファイル名を記入
-            worksheet.write(0, start_col, file.name, filename_format)
-
-            # データを書き込む
-            worksheet.write(1, start_col, 'WN', cell_format) # X項目名
-            worksheet.write(1, start_col + 1, '%T', cell_format) # Y項目名
-            for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-                worksheet.write(i + 2, start_col, x, cell_format) # Xデータ
-                worksheet.write(i + 2, start_col + 1, y, cell_format) # Yデータ
-
-            # グラフ表示用Yデータ列の補正定数の設定：先に処理したものから上へ40ずつずらす
-            overlayconst = (num_files - now_file) * 40
-            
-            # グラフ表示用Yデータ列の計算式を設定
-            worksheet.write(0, start_col + 2, 1, border_format)
-            worksheet.write(1, start_col + 2, overlayconst, border_format)
-
-            # 順序カウンタ増加
-            now_file += 1
-            
-            # stlite対応の文字列操作
-            col1 = col_num_to_excel_col(start_col + 1)
-            col2 = col_num_to_excel_col(start_col + 2)
-            formula = "=" + col1 + "3*$" + col2 + "$1+$" + col2 + "$2"
-            worksheet.write_formula(2, start_col + 2, formula, cell_format)
-            
-            # 列名を事前に計算
-            col1 = col_num_to_excel_col(start_col + 1)
-            col2 = col_num_to_excel_col(start_col + 2)
-            col_categories = col_num_to_excel_col(start_col)
-
-            # ループ内のformula
-            for i in range(1, len(df)):
-                formula = "=" + col1 + str(i + 3) + "*$" + col2 + "$1+$" + col2 + "$2"
-                worksheet.write_formula(i + 2, start_col + 2, formula, cell_format)
+            try:
+                # ファイル名とデータの読み取り
+                content = file.read().decode("shift_jis").splitlines()
                 
-            # グラフを作成
-            # stlite対応の文字列操作
-            categories_range = "=Data!$" + col_categories + "$3:$" + col_categories + "$" + str(len(df) + 2)
-            values_range = "=Data!$" + col2 + "$3:$" + col2 + "$" + str(len(df) + 2)
-
-            # ファイル名から拡張子を除去
-            filename_noext = os.path.splitext(file.name)[0]
-            # Excelにプロット追加
-            chart.add_series({
-                'categories': categories_range,
-                'values': values_range,
-                'name': filename_noext,
-                'marker': {'type': 'none'},
-                'line': {'color': '#008EC0', 'width': 1.5},
-                'title': None,
-            })
-            
-            # 表示用グラフにプロットを追加
-            df["Y"] = df["Y"] + overlayconst
-            ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
-            
-            start_col += 4  # 次のファイルは右に4列ずらして書き込み
-            # ループ終了
+                # XYデータを抽出してDataFrameに追加
+                xy_data_lines = extract_xy_data(content)
+                data = [line.split() for line in xy_data_lines if line.strip()]
+                df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
+                data_frames.append(df)
+    
+                # %T最小値を保持
+                xlsxYmin = math.floor(df.loc[104:, "Y"].min() / 10) * 10 - 10
+                           
+                # セルの高さを設定
+                for i in range(len(df) + 3):
+                    worksheet.set_row(i, 20, cell_format)
+    
+                # ファイル名を記入
+                worksheet.write(0, start_col, file.name, filename_format)
+    
+                # データを書き込む
+                worksheet.write(1, start_col, 'WN', cell_format) # X項目名
+                worksheet.write(1, start_col + 1, '%T', cell_format) # Y項目名
+                for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
+                    worksheet.write(i + 2, start_col, x, cell_format) # Xデータ
+                    worksheet.write(i + 2, start_col + 1, y, cell_format) # Yデータ
+    
+                # グラフ表示用Yデータ列の補正定数の設定：先に処理したものから上へ40ずつずらす
+                overlayconst = (num_files - now_file) * 40
+                
+                # グラフ表示用Yデータ列の計算式を設定
+                worksheet.write(0, start_col + 2, 1, border_format)
+                worksheet.write(1, start_col + 2, overlayconst, border_format)
+    
+                # 順序カウンタ増加
+                now_file += 1
+                
+                # stlite対応の文字列操作
+                col1 = col_num_to_excel_col(start_col + 1)
+                col2 = col_num_to_excel_col(start_col + 2)
+                formula = "=" + col1 + "3*$" + col2 + "$1+$" + col2 + "$2"
+                worksheet.write_formula(2, start_col + 2, formula, cell_format)
+                
+                # 列名を事前に計算
+                col1 = col_num_to_excel_col(start_col + 1)
+                col2 = col_num_to_excel_col(start_col + 2)
+                col_categories = col_num_to_excel_col(start_col)
+    
+                # ループ内のformula
+                for i in range(1, len(df)):
+                    formula = "=" + col1 + str(i + 3) + "*$" + col2 + "$1+$" + col2 + "$2"
+                    worksheet.write_formula(i + 2, start_col + 2, formula, cell_format)
+                    
+                # グラフを作成
+                # stlite対応の文字列操作
+                categories_range = "=Data!$" + col_categories + "$3:$" + col_categories + "$" + str(len(df) + 2)
+                values_range = "=Data!$" + col2 + "$3:$" + col2 + "$" + str(len(df) + 2)
+    
+                # ファイル名から拡張子を除去
+                filename_noext = os.path.splitext(file.name)[0]
+                # Excelにプロット追加
+                chart.add_series({
+                    'categories': categories_range,
+                    'values': values_range,
+                    'name': filename_noext,
+                    'marker': {'type': 'none'},
+                    'line': {'color': '#008EC0', 'width': 1.5},
+                    'title': None,
+                })
+                
+                # 表示用グラフにプロットを追加
+                df["Y"] = df["Y"] + overlayconst
+                ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
+                
+                start_col += 4  # 次のファイルは右に4列ずらして書き込み
+                # ループ終了
+        
+            except ValueError as e:
+                st.error(f"エラー: {file.name} - {str(e)}")
+                continue  # エラーがある場合、このファイルをスキップ
 
         # Excelグラフ書式修正
         chart.set_x_axis({
