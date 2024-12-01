@@ -106,8 +106,7 @@ def convert_files_to_excel(files):
             data_frames.append(df)
 
             # %T最小値を保持
-            if now_file == num_files:
-                xlsxYmin = math.floor(df["Y"].min() / 10) * 10 - 10
+            xlsxYmin = math.floor(df.loc[104:, "Y"].min() / 10) * 10 - 10
                        
             # セルの高さを設定
             for i in range(len(df) + 3):
