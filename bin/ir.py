@@ -197,12 +197,9 @@ def convert_files_to_excel(files):
         })
         # プロットエリアの位置を調整
         chart.set_plotarea({
-            'layout': {
-                'x': 0.2,  # プロットエリアの左端を右に移動
-                'y': 0.15,  # 必要に応じて縦方向も調整
-                'width': 0.7,  # プロットエリアの幅
-                'height': 0.7,  # プロットエリアの高さ
-            }
+            'layout': {'x': 0.05},
+            'border': {'color': 'black', 'width': 1.5}, 
+            'fill': {'none': True}})
         })
         chart.set_size({'width': 460, 'height': 370 + 80 * num_files})
         chart.set_legend({'none': True})
