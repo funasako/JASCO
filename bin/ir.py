@@ -203,7 +203,7 @@ def convert_files_to_excel(files):
         ax.set_xlabel(r'$\mathrm{Wavenumber / cm^{-1}}$', fontsize=12)
         ax.set_ylabel("Transmittance (%)", fontsize=12)
         ax.set_xlim(500, 4000) 
-        ax.legend(loc="upper right", fontsize=10)
+        ax.legend(loc="lower left", fontsize=10)
         ax.grid(True)
         ax.invert_xaxis()
         # Streamlitでグラフを表示
