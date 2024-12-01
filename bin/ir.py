@@ -76,33 +76,9 @@ def convert_files_to_excel(files):
         chart.set_size({'width': 533, 'height': 377})
         chart.set_chartarea({'border': {'none': True}, 'fill': {'none': True}})
         chart.set_plotarea({'border': {'color': 'black', 'width': 1.5}, 'fill': {'none': True}})
-        chart.set_legend({'none': True})
-        chart.set_x_axis({
-            'line': {'color': 'black', 'width': 1.5},
-            'major_tick_mark': 'inside',
-            'major_unit': 500,
-            'min': 500,
-            'max': 4000,
-            'reverse': True,
-            'crossing': 'max',
-            'name': 'Wavenumber / cm–1',
-            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
-            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
-        })
-        chart.set_y_axis({
-            'line': {'color': 'black', 'width': 1.5},
-            'major_tick_mark': 'inside',
-            'max': 100,
-            'name': 'Transmittance (%)',
-            'major_gridlines': {'visible': False},
-            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
-            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
-        })
-        
+        chart.set_legend({'none': True})      
         start_col = 11  # 初期列（L列 = インデックス11）
-    
-
-
+   
         # すべてのデータを格納するリスト
         data_frames = []
         
@@ -185,7 +161,9 @@ def convert_files_to_excel(files):
             })
 
             start_col += 4  # 次のファイルは右に4列ずらして書き込み
+            # ループ終了
 
+        # Excelグラフ書式修正
         chart.set_x_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
@@ -195,6 +173,15 @@ def convert_files_to_excel(files):
             'reverse': True,
             'crossing': 'max',
             'name': 'Wavenumber / cm–1',
+            'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
+            'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
+        })
+        chart.set_y_axis({
+            'line': {'color': 'black', 'width': 1.5},
+            'major_tick_mark': 'inside',
+            'max':(num_files - 1) * 40 + 110,
+            'name': 'Transmittance (%)',
+            'major_gridlines': {'visible': False},
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
