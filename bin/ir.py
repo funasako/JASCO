@@ -197,7 +197,7 @@ def convert_files_to_excel(files):
         })
         # プロットエリアの位置を調整
         chart.set_plotarea({
-            'layout': {'x': 0.1},
+            'layout': {'x': 0.2},
             'border': {'color': 'black', 'width': 1.5}, 
             'fill': {'none': True}
         })
