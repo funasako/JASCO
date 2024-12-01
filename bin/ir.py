@@ -171,7 +171,6 @@ def convert_files_to_excel(files):
             start_col += 4  # 次のファイルは右に4列ずらして書き込み
             # ループ終了
 
-        graphymin = math.floor(xlsxymin / 10) * 10 - 10
         # Excelグラフ書式修正
         chart.set_x_axis({
             'line': {'color': 'black', 'width': 1.5},
