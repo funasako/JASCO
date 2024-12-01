@@ -146,7 +146,7 @@ def convert_files_to_excel(files):
             
             # 書き込む値を計算
             value_to_write = processing_index * 40
-            print(f"File {i+1}/{num_files}, Processing Index: {processing_index}, Value: {value_to_write}")
+            st.write(f"File {i+1}/{num_files}, Processing Index: {processing_index}, Value: {value_to_write}")
 
 
             # N列の計算式を設定
