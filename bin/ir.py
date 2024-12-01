@@ -188,7 +188,7 @@ def convert_files_to_excel(files):
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
             'max': (num_files - 1) * 40 + 110,
-            'min': math.floor(xlxsymin / 10) * 10 - 10
+            'min': math.floor(xlxsymin / 10) * 10 - 10,
             'crossing': -1000,
             'name': 'Transmittance (%)',
             'major_gridlines': {'visible': False},
