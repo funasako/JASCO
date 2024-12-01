@@ -81,6 +81,7 @@ def convert_files_to_excel(files):
         chart.set_chartarea({'border': {'none': True}, 'fill': {'none': True}})
         chart.set_plotarea({'border': {'color': 'black', 'width': 1.5}, 'fill': {'none': True}})
         chart.set_legend({'none': True})
+        chart.set_title({'none': True}) 
         
         start_col = 11  # 初期列（L列 = インデックス11）
    
