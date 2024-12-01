@@ -142,13 +142,11 @@ def convert_files_to_excel(files):
                 worksheet.write(i + 2, start_col + 1, y, cell_format)
 
             # 掛け算する定数の設定：先に処理したものから上へ40ずつずらす
-            processing_index = num_files - i
+            processing_index = num_files - i + 1
             
             # 書き込む値を計算
             value_to_write = processing_index * 40
-            st.write(f"File {i+1}/{num_files}, Processing Index: {processing_index}, Value: {value_to_write}")
-
-
+            
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
             worksheet.write(1, start_col + 2, value_to_write, border_format)
@@ -228,11 +226,4 @@ if uploaded_files:
         file_name=file_name,  # 動的に生成したファイル名を指定
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
-    
-with st.sidebar:
-    st.write("Debug Info:")
-    st.write(f"Total files: {num_files}")
-    for i, file in enumerate(uploaded_files):
-        processing_index = num_files - i
-        st.write(f"File {i+1}: Index {processing_index}")
 
