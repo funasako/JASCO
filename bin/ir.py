@@ -106,8 +106,8 @@ def convert_files_to_excel(files):
             # データフレーム化
             data_frames.append(df)
 
-            # 1ファイル目の%T最小値を保持
-            if i == 0:
+            # 最終ファイル目の%T最小値を保持
+            if i == num_file - 1:
                 xlsxYmin = math.floor(df["Y"].min() / 10) * 10 - 20
             
            
