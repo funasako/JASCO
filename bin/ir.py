@@ -229,8 +229,8 @@ if uploaded_files:
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
 with st.sidebar:
-st.write("Debug Info:")
-st.write(f"Total files: {num_files}")
-for i, file in enumerate(uploaded_files):
-    processing_index = num_files - i
-    st.write(f"File {i+1}: Index {processing_index}")
+    st.write("Debug Info:")
+    st.write(f"Total files: {num_files}")
+    for i, file in enumerate(uploaded_files):
+        processing_index = num_files - i
+        st.write(f"File {i+1}: Index {processing_index}")
