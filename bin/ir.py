@@ -109,9 +109,10 @@ def convert_files_to_excel(files):
         # 表示用グラフの作成
         fig, ax = plt.subplots(figsize=(8, 6))
         
-
+        # ファイル処理ループの前に、ファイル数を取得
+        num_files = len(uploaded_files)
         
-        for file in files:
+        for i, file in enumerate(uploaded_files):
             # ファイル名とデータの読み取り
             content = file.read().decode("shift_jis").splitlines()
             # データ抽出関数を使用
@@ -140,9 +141,12 @@ def convert_files_to_excel(files):
                 worksheet.write(i + 2, start_col, x, cell_format)
                 worksheet.write(i + 2, start_col + 1, y, cell_format)
 
+            # 掛け算する定数の設定：先に処理したものから上へ40ずつずらす
+            overlayconst = (num_files - i) * 40
+
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
-            worksheet.write(1, start_col + 2, 0, border_format)
+            worksheet.write(1, start_col + 2, overlayconst, border_format)
             
             # stlite対応の文字列操作
             col1 = col_num_to_excel_col(start_col + 1)
