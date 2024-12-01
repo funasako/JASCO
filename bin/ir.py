@@ -80,7 +80,8 @@ def convert_files_to_excel(files):
         chart.set_size({'width': 533, 'height': 377})
         chart.set_chartarea({'border': {'none': True}, 'fill': {'none': True}})
         chart.set_plotarea({'border': {'color': 'black', 'width': 1.5}, 'fill': {'none': True}})
-        chart.set_legend({'none': True})      
+        chart.set_legend({'none': True})
+        
         start_col = 11  # 初期列（L列 = インデックス11）
    
         # すべてのデータを格納するリスト
@@ -196,7 +197,8 @@ def convert_files_to_excel(files):
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
-        chart.set_size({'width': 460, 'height': 460})
+        chart.set_size({'width': 460, 'height': 370 + 80 * num_files})
+        chart.set_legend({'none': True})
         worksheet.insert_chart("A4", chart)
 
         # 表示用グラフの装飾
