@@ -38,7 +38,7 @@ def extract_xy_data(content):
     try:
         xy_start = content.index("XYDATA") + 1  # "XYDATA"の位置を検索
     except ValueError:
-        raise ValueError("このファイルには 'XYDATA' セクションが存在しません。")
+        raise ValueError("日本分光のスペクトルファイルではないようです。")
         
     xy_end = None #終了行は以下のように分岐    
     # '##### Extended Information'があれば、その2行上
