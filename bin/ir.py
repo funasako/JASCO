@@ -106,7 +106,7 @@ def convert_files_to_excel(files):
 
             # 1ファイル目の%T最小値を保持
             if i == 0:
-            xlsxymin = min(y)
+                xlsxymin = min(y)
             
             # グラフにプロットを追加
             ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
