@@ -195,7 +195,7 @@ def convert_files_to_excel(files):
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
             'name_layout': {  # 軸ラベルの位置を調整
-                'x': -1.90,  # X方向オフセット（負の値で左へ移動）
+                'x': -0.3,  # X方向オフセット（負の値で左へ移動）
                 'y': 0.5,    # Y方向オフセット（0が中央、1が下端）
             },
         })
