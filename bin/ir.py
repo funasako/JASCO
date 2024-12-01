@@ -98,19 +98,17 @@ def convert_files_to_excel(files):
         for i, file in enumerate(uploaded_files):
             # ファイル名とデータの読み取り
             content = file.read().decode("shift_jis").splitlines()
-            # データ抽出関数を使用
+            
+            # XYデータを抽出してDataFrameに追加
             xy_data_lines = extract_xy_data(content)
-
             data = [line.split() for line in xy_data_lines if line.strip()]
             df = pd.DataFrame(data, columns=["X", "Y"]).astype(float)
-            # データフレーム化
             data_frames.append(df)
 
             # 最終ファイル目の%T最小値を保持
             if i == num_files - 1:
-                xlsxYmin = math.floor(df["Y"].min() / 10) * 10 - 20
-            
-           
+                xlsxYmin = math.floor(df["Y"].min() / 10) * 10 - 10
+                       
             # セルの高さを設定
             for i in range(len(df) + 3):
                 worksheet.set_row(i, 20, cell_format)
@@ -119,20 +117,20 @@ def convert_files_to_excel(files):
             worksheet.write(0, start_col, file.name, filename_format)
 
             # データを書き込む
-            worksheet.write(1, start_col, 'WL', cell_format)
-            worksheet.write(1, start_col + 1, '%T', cell_format)
+            worksheet.write(1, start_col, 'WL', cell_format) # X項目名
+            worksheet.write(1, start_col + 1, '%T', cell_format) # Y項目名
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
-                worksheet.write(i + 2, start_col, x, cell_format)
-                worksheet.write(i + 2, start_col + 1, y, cell_format)
+                worksheet.write(i + 2, start_col, x, cell_format) # Xデータ
+                worksheet.write(i + 2, start_col + 1, y, cell_format) # Yデータ
 
-            # 掛け算する定数の設定：先に処理したものから上へ40ずつずらす
+            # グラフ表示用Yデータ列の補正定数の設定：先に処理したものから上へ40ずつずらす
             overlayconst = (num_files - now_file) * 40
             
-            # N列の計算式を設定
+            # グラフ表示用Yデータ列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
             worksheet.write(1, start_col + 2, overlayconst, border_format)
 
-            # カウンタ増加
+            # 順序カウンタ増加
             now_file += 1
             
             # stlite対応の文字列操作
