@@ -149,7 +149,7 @@ def convert_files_to_excel(files):
             
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
-            worksheet.write(1, start_col + 2, value_to_write, border_format)
+            worksheet.write(1, start_col + 2, processing_index, border_format)
             
             # stlite対応の文字列操作
             col1 = col_num_to_excel_col(start_col + 1)
