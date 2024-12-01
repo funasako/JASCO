@@ -76,6 +76,7 @@ def convert_files_to_excel(files):
         chart.set_chartarea({'border': {'none': True}, 'fill': {'none': True}})
         chart.set_plotarea({'border': {'color': 'black', 'width': 1.5}, 'fill': {'none': True}})
         chart.set_legend({'none': True})
+        chart.set_title({'none': True}) 
         chart.set_x_axis({
             'line': {'color': 'black', 'width': 1.5},
             'major_tick_mark': 'inside',
