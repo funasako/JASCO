@@ -195,12 +195,6 @@ def convert_files_to_excel(files):
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
-        # プロットエリアの位置を調整
-        chart.set_plotarea({
-            'layout': {'x': 0.2},
-            'border': {'color': 'black', 'width': 1.5}, 
-            'fill': {'none': True}
-        })
         chart.set_size({'width': 460, 'height': 370 + 80 * num_files})
         chart.set_legend({'none': True})
         worksheet.insert_chart("A4", chart)
