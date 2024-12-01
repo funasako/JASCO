@@ -106,12 +106,9 @@ def convert_files_to_excel(files):
 
             # 1ファイル目の%T最小値を保持
             if i == 0:
-                xlsxYmin = math.floor(df["Y"].min() / 10) * 10 - 10
+                xlsxYmin = math.floor(df["Y"].min() / 10) * 10 - 20
             
-            # グラフにプロットを追加
-            ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
-
-            
+           
             # セルの高さを設定
             for i in range(len(df) + 3):
                 worksheet.set_row(i, 20, cell_format)
@@ -159,7 +156,7 @@ def convert_files_to_excel(files):
 
             # ファイル名から拡張子を除去
             filename_noext = os.path.splitext(file.name)[0]
-
+            # Excelにプロット追加
             chart.add_series({
                 'categories': categories_range,
                 'values': values_range,
@@ -167,7 +164,11 @@ def convert_files_to_excel(files):
                 'marker': {'type': 'none'},
                 'line': {'color': '#008EC0', 'width': 1.5},
             })
-
+            
+            # 表示用グラフにプロットを追加
+            df["Y"] = df["Y"] + overlayconst
+            ax.plot(df["X"], df["Y"], label=file.name, linewidth=1.5)
+            
             start_col += 4  # 次のファイルは右に4列ずらして書き込み
             # ループ終了
 
