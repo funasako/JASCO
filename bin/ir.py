@@ -142,7 +142,13 @@ def convert_files_to_excel(files):
                 worksheet.write(i + 2, start_col + 1, y, cell_format)
 
             # 掛け算する定数の設定：先に処理したものから上へ40ずつずらす
-            overlayconst = (num_files - i) * 40
+            processing_index = num_files - i
+            
+            # 書き込む値を計算
+            value_to_write = processing_index * 40
+            
+            # 既存の書き込み処理を修正
+            worksheet.write(0, start_col + 2, value_to_write, border_format)
 
             # N列の計算式を設定
             worksheet.write(0, start_col + 2, 1, border_format)
