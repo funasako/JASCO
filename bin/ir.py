@@ -113,7 +113,7 @@ def convert_files_to_excel(files):
             worksheet.write(0, start_col, file.name, filename_format)
 
             # データを書き込む
-            worksheet.write(1, start_col, 'WL', cell_format) # X項目名
+            worksheet.write(1, start_col, 'WN', cell_format) # X項目名
             worksheet.write(1, start_col + 1, '%T', cell_format) # Y項目名
             for i, (x, y) in enumerate(zip(df["X"], df["Y"])):
                 worksheet.write(i + 2, start_col, x, cell_format) # Xデータ
