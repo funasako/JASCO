@@ -206,7 +206,6 @@ def convert_files_to_excel(files):
         ax.legend(loc="upper right", fontsize=10)
         ax.grid(True)
 
-
     
     return output.getvalue()
 
