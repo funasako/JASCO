@@ -21,6 +21,8 @@ st.write("")
 
 # 変数初期化
 xlsxYmin = None
+# 表示用グラフの作成
+fig, ax = plt.subplots(figsize=(8, 8))
 
 # ファイルアップロード
 uploaded_files = st.file_uploader(
@@ -89,7 +91,7 @@ def convert_files_to_excel(files):
         data_frames = []
         
         # 表示用グラフの作成
-        fig, ax = plt.subplots(figsize=(8, 8))
+        # fig, ax = plt.subplots(figsize=(8, 8))
         
         # ファイル処理ループの前に、ファイル数を取得
         num_files = len(uploaded_files)
