@@ -216,7 +216,7 @@ def convert_files_to_excel(files):
         ax.grid(True)
         ax.invert_xaxis()
         # Streamlitでグラフを表示
-        st.pyplot(fig)
+        # st.pyplot(fig)
     
     return output.getvalue()
 
@@ -234,4 +234,8 @@ if uploaded_files:
         file_name=file_name,  # 動的に生成したファイル名を指定
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
+    
+    # Streamlitでグラフを表示
+    st.pyplot(fig)
+
 
