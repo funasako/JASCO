@@ -213,9 +213,9 @@ def convert_files_to_excel(files):
 if uploaded_files:
     # 現在の日本時間（JST）を取得
     japan_tz = pytz.timezone('Asia/Tokyo')
-    current_sate = datetime.datetime.now(japan_tz).strftime("%Y%m%d")
+    current_date = datetime.datetime.now(japan_tz).strftime("%Y%m%d")
     current_time = datetime.datetime.now(japan_tz).strftime("%H%M%S")
-    file_name = f"{current_Date}_UV-vis_{current_time}.xlsx"
+    file_name = f"{current_date}_UV-vis_{current_time}.xlsx"
     
     # Excel変換とデータ保存
     excel_data = convert_files_to_excel(uploaded_files)
