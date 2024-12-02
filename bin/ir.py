@@ -236,7 +236,7 @@ if uploaded_files:
         file_name=file_name,  # 動的に生成したファイル名を指定
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
-    st.text(f'<span style="color:red;background:pink">※Excel中のグラフの横軸ラベルの単位-1を手動で上付きにしてください</span>', unsafe_allow_html=True)
+    st.markdown(":red[※Excel中のグラフの横軸ラベルの単位-1を手動で上付きにしてください]")
     
     # Streamlitでグラフを表示
     st.text("\n")
