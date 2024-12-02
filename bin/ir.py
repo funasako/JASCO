@@ -238,6 +238,7 @@ if uploaded_files:
     )
     
     # Streamlitでグラフを表示
+    st.text("\n")
     st.pyplot(fig)
 
 
