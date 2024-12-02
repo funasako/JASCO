@@ -8,7 +8,6 @@ import pytz
 import os
 import math
 
-
 # タイトル等
 st.set_page_config(page_title="IR | JASCO Spectra Formatter", page_icon=":bar_chart:", )
 st.title("IR | JASCO Spectra Formatter")
