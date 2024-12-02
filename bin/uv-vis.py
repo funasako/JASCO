@@ -25,6 +25,9 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True                         
 )
 
+# 表示用グラフの作成
+fig, ax = plt.subplots(figsize=(8, 6))
+
 # Excel列ずらし対応
 def col_num_to_excel_col(n):
     """Convert a 0-based column number to Excel-style column label (e.g., 0 -> 'A', 27 -> 'AB')"""
@@ -106,12 +109,7 @@ def convert_files_to_excel(files):
 
         # すべてのデータを格納するリスト
         data_frames = []
-        
-        # 表示用グラフの作成
-        fig, ax = plt.subplots(figsize=(8, 6))
-        
-
-        
+               
         for file in files:
             try:
                 # ファイル名とデータの読み取り
@@ -208,8 +206,7 @@ def convert_files_to_excel(files):
         ax.legend(loc="upper right", fontsize=10)
         ax.grid(True)
 
-        # Streamlitでグラフを表示
-        st.pyplot(fig)
+
     
     return output.getvalue()
 
@@ -227,3 +224,6 @@ if uploaded_files:
         file_name=file_name,  # 動的に生成したファイル名を指定
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
+    
+    # Streamlitでグラフを表示
+    st.pyplot(fig)
