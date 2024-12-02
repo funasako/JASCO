@@ -205,7 +205,7 @@ def convert_files_to_excel(files):
             'num_font': {'color': 'black', 'size': 16, 'name': 'Arial'},
             'name_font': {'color': 'black', 'size': 16, 'name': 'Arial', 'bold': False},
         })
-        chart.set_size({'width': 460, 'height': 370 + 80 * num_files})
+        chart.set_size({'width': 460, 'height': 370 + 50 * num_files})
         chart.set_legend({'none': True})
         worksheet.insert_chart("A4", chart)
 
@@ -236,6 +236,7 @@ if uploaded_files:
         file_name=file_name,  # 動的に生成したファイル名を指定
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )
+    st.text("Excel中のグラフの横軸ラベルの単位-1を手動で上付きにしてください")
     
     # Streamlitでグラフを表示
     st.text("\n")
