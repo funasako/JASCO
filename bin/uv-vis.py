@@ -18,15 +18,15 @@ st.write("3. Excelファイルをダウンロード")
 st.write("4. 別のExcelファイルを作成する場合は、ページを再読込するかアップロード済みファイルをすべて✕ボタンで削除する")
 st.write("")
 
+# 表示用グラフの作成
+fig, ax = plt.subplots(figsize=(8, 6))
+
 # ファイルアップロード
 uploaded_files = st.file_uploader(
     "エクスポートしたtxtファイルをアップロード（複数可）",
     type=["txt"], 
     accept_multiple_files=True                         
 )
-
-# 表示用グラフの作成
-fig, ax = plt.subplots(figsize=(8, 6))
 
 # Excel列ずらし対応
 def col_num_to_excel_col(n):
